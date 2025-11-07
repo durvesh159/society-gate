@@ -17,7 +17,7 @@ export default function ResidentDashboard() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
 
-//   const socket = io('http://localhost:5000', { transports: ['websocket'] });
+//   const socket = io('https://society-gate.onrender.com', { transports: ['websocket'] });
 
   const fetchPending = async () => {
     try {

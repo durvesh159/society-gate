@@ -113,7 +113,7 @@ export default function AdminDashboard() {
 
   // initialize socket
   useEffect(() => {
-    const socket = io('http://localhost:5000'); // backend socket server
+    const socket = io('https://society-gate.onrender.com'); // backend socket server
 
     // listen for visitor updates
     socket.on('visitorUpdate', (data) => {

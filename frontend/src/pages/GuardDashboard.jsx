@@ -13,7 +13,7 @@ export default function GuardDashboard() {
   const [mobile, setMobile] = useState('');
   const [purpose, setPurpose] = useState('');
   const [verifyInput, setVerifyInput] = useState('');
-  //const socket = io('http://localhost:5000', { transports: ['websocket'] });
+  //const socket = io('https://society-gate.onrender.com', { transports: ['websocket'] });
 
   const fetchVisitors = async () => {
     try {
