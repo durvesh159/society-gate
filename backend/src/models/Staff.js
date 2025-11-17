@@ -21,16 +21,40 @@ const bcrypt = require('bcryptjs');
 
 const StaffSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  enum: ["Cook", "Maid", "Driver", "Cleaner", "Gardener", "Electrician", "Plumber", "Other"],
-  required: true,
-  address: String,
+
+  role: {
+    type: String,
+    enum: [
+      "Cook",
+      "Maid",
+      "Driver",
+      "Cleaner",
+      "Gardener",
+      "Electrician",
+      "Plumber",
+      "Other"
+    ],
+    required: true
+  },
+
+  address: { type: String },
+
   email: { type: String, unique: true, required: true },
+
   password: { type: String, required: true },
-  mobile: String,
+
+  mobile: { type: String },
+
   isPresent: { type: Boolean, default: false },
-  entryTime: Date,
-  exitTime: Date,
-  uniqueId: { type: String, default: () => `STAFF-${Date.now()}` },
+
+  entryTime: { type: Date },
+
+  exitTime: { type: Date },
+
+  uniqueId: {
+    type: String,
+    default: () => `STAFF-${Date.now()}-${Math.floor(Math.random() * 1000)}`
+  }
 }, { timestamps: true });
 
 // Password comparison
