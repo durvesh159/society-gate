@@ -11,12 +11,17 @@ const addResident = async (req, res) => {
   const resident = new Resident({ name, wing, flatNo, email, password: hashed, mobile });
   await resident.save();
 
+  try { 
   await sendMail({
     to: email,
     subject: 'Welcome to Society Gate System',
     html: `<p>Hello ${name},</p><p>Your resident account has been created.</p>
            <p>Email: ${email}<br/>Password: ${password}</p>`
-  });
+  }); 
+} catch (e) { 
+  console.log("Mail error:", e);
+}
+
 
   res.json(resident);
 };
