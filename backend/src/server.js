@@ -11,12 +11,26 @@ const app = express();
 const server = http.createServer(app); // create HTTP server
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173', // frontend URL
-    methods: ['GET', 'POST'],
+    //origin: 'http://localhost:5173', // frontend URL
+    origin: [
+  "http://localhost:5173",
+  "https://society-gate-frontend.onrender.com"
+],
+
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
   },
 });
 
-app.use(cors());
+//app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://society-gate-frontend.onrender.com"
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 
 // store io globally so controllers can use it
