@@ -11,7 +11,7 @@
 
 //   // ✅ Socket for real-time updates
 //   useEffect(() => {
-//     const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5000");
+//     const socket = io(import.meta.env.VITE_BACKEND_URL || "https://society-gate.onrender.com");
 
 //     socket.on("visitorUpdate", fetchVisitors);
 //     socket.on("staffUpdate", fetchStaff);
@@ -275,7 +275,7 @@
 //   const { logout } = useContext(AuthContext);
 
 //   useEffect(() => {
-//     const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5000");
+//     const socket = io(import.meta.env.VITE_BACKEND_URL || "https://society-gate.onrender.com");
 //     socket.on("visitorUpdate", fetchVisitors);
 //     socket.on("staffUpdate", fetchStaff);
 //     return () => socket.disconnect();
@@ -584,7 +584,7 @@
 //   const [staffStatus, setStaffStatus] = useState([]);
 
 //   useEffect(() => {
-//     const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5000");
+//     const socket = io(import.meta.env.VITE_BACKEND_URL || "https://society-gate.onrender.com");
 
 //     socket.on("visitorUpdate", loadData);
 //     socket.on("staffUpdate", loadData);
@@ -735,7 +735,7 @@ export default function AdminDashboard() {
   const [staffStatus, setStaffStatus] = useState([]);
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5000");
+    const socket = io(import.meta.env.VITE_BACKEND_URL || "https://society-gate.onrender.com");
 
     socket.on("visitorUpdate", loadData);
     socket.on("staffUpdate", loadData);
