@@ -29,6 +29,7 @@ const StaffSchema = new mongoose.Schema({
   isPresent: { type: Boolean, default: false },
   entryTime: Date,
   exitTime: Date,
+  uniqueId: { type: String, default: () => `STAFF-${Date.now()}` },
 }, { timestamps: true });
 
 // Password comparison

@@ -28,8 +28,6 @@ const auth = require('../middleware/auth');
 const { permit } = require('../middleware/roles');
 const staffController = require('../controllers/staffController');
 
-
-
 const {
   addStaff,
   getAllStaff,

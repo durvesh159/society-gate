@@ -213,9 +213,7 @@ const addStaff = async (req, res) => {
   try {
     const { name, role, address, email, password, mobile } = req.body;
 
-    if (!name || !role || !email || !password) {
-      return res.status(400).json({ msg: "Missing required fields" });
-    }
+    console.log("BODY:", req.body);
 
     const existing = await Staff.findOne({ email });
     if (existing) {
@@ -224,6 +222,8 @@ const addStaff = async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
 
+    const uniqueId = `STAFF-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
     const staff = new Staff({
       name,
       role,
@@ -231,7 +231,8 @@ const addStaff = async (req, res) => {
       email,
       password: hashed,
       mobile,
-      isPresent: false
+      uniqueId,
+      isPresent: false,
     });
 
     await staff.save();
@@ -239,7 +240,7 @@ const addStaff = async (req, res) => {
     res.status(201).json(staff);
 
   } catch (err) {
-    console.error("Error in addStaff:", err);
+    console.error("ERROR in addStaff:", err);
     res.status(500).json({ msg: "Server error while adding staff" });
   }
 };
