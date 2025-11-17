@@ -29,6 +29,9 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/guard', require('./routes/guard'));
 app.use('/api/resident', require('./routes/resident'));
 app.use('/api/password', require('./routes/password'));
+app.use('/api/staff', require('./routes/staff'));
+app.use('/api/attendance', require('./routes/attendance'));
+
 
 app.get('/', (req, res) => res.send('Society Gate API'));
 

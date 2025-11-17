@@ -7,7 +7,8 @@ const GuardSchema = new mongoose.Schema({
   password: String,
   mobile: String,
   uniqueId: { type: String, unique: true },
-  role: { type: String, default: 'guard' }
+  role: { type: String, default: 'guard' },
+  isPresent: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Guard', GuardSchema);
