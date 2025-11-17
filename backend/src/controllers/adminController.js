@@ -134,14 +134,16 @@ const addResident = async (req, res) => {
     await resident.save();
 
     try {
-      await sendMail({
-        to: email,
-        subject: 'Welcome to Society Gate System',
-        html: `Your account is ready. Email: ${email}, Password: ${password}`
-      });
-    } catch (e) {
-      console.log("Mail error:", e);
-    }
+  await sendMail({
+    to: email,
+    subject: 'Welcome to Society Gate System',
+    html: `Your account is ready. Email: ${email}, Password: ${password}`
+  });
+} catch (mailError) {
+  console.log("Mail sending failed on server:", mailError);
+  // DO NOT return error — allow resident creation to continue
+}
+
 
     res.json(resident);
 
