@@ -230,4 +230,24 @@ const getAllResidents = async (req, res) => {
   }
 };
 
-module.exports = { addResident, addGuard, addStaff, getVisitors, getAllStaff, getAllResidents, getAllGuards, deleteStaff };
+
+const deleteResident = async (req, res) => {
+  try {
+    await Resident.findByIdAndDelete(req.params.id);
+    res.json({ msg: "Resident deleted" });
+  } catch (err) {
+    res.status(500).json({ msg: "Error deleting resident" });
+  }
+};
+
+const deleteGuard = async (req, res) => {
+  try {
+    await Guard.findByIdAndDelete(req.params.id);
+    res.json({ msg: "Guard deleted" });
+  } catch (err) {
+    res.status(500).json({ msg: "Error deleting guard" });
+  }
+};
+
+
+module.exports = { addResident, addGuard, addStaff, getVisitors, getAllStaff, getAllResidents, getAllGuards, deleteStaff, deleteGuard, deleteResident };
