@@ -240,7 +240,7 @@ const addStaff = async (req, res) => {
     res.status(201).json(staff);
 
   } catch (err) {
-    console.error("ERROR in addStaff:", err);
+    console.error("ERROR in addStaff:", err.message, err);
     res.status(500).json({ msg: "Server error while adding staff" });
   }
 };
