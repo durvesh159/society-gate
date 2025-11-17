@@ -115,10 +115,10 @@ const addResident = async (req, res) => {
   try {
     const { name, wing, flatNo, email, password, mobile } = req.body;
 
+    console.log("Incoming Resident Body:", req.body);   // ⭐ ADD THIS
+
     const exists = await Resident.findOne({ email });
-    if (exists) {
-      return res.status(400).json({ msg: "Email already exists!" });
-    }
+    if (exists) return res.status(400).json({ msg: "Email already exists!" });
 
     const hashed = await bcrypt.hash(password, 10);
 
@@ -131,27 +131,28 @@ const addResident = async (req, res) => {
       mobile
     });
 
+    console.log("Saving resident...");  // ⭐ ADD THIS
     await resident.save();
+    console.log("Saved successfully."); // ⭐ ADD THIS
 
     try {
-  await sendMail({
-    to: email,
-    subject: 'Welcome to Society Gate System',
-    html: `Your account is ready. Email: ${email}, Password: ${password}`
-  });
-} catch (mailError) {
-  console.log("Mail sending failed on server:", mailError);
-  // DO NOT return error — allow resident creation to continue
-}
+      await sendMail({
+        to: email,
+        subject: 'Welcome to Society Gate System',
+        html: `Your account is ready.<br>Email: ${email}<br>Password: ${password}`
+      });
+    } catch (mailError) {
+      console.log("MAIL ERROR (ignored):", mailError);
+    }
 
-
-    res.json(resident);
+    return res.json(resident);
 
   } catch (err) {
-    console.log("Add Resident Server Error:", err);
-    res.status(500).json({ msg: "Server Error Adding Resident" });
+    console.log("SERVER ERROR in addResident():", err);  // ⭐ SHOW TRUE ERROR
+    return res.status(500).json({ msg: "Server Error Adding Resident" });
   }
 };
+
 
 
 const addGuard = async (req, res) => {
