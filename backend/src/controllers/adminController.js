@@ -128,7 +128,8 @@ const addResident = async (req, res) => {
       flatNo,
       email,
       password: hashed,
-      mobile
+      mobile,
+      uniqueId: `${wing}-${flatNo}-${Date.now()}`
     });
 
     console.log("Saving resident...");  // ⭐ ADD THIS
