@@ -210,20 +210,40 @@ const getAllGuards = async (req, res) => {
 
 // ✅ Admin adds staff (cook, maid, etc.)
 const addStaff = async (req, res) => {
-  const { name, role, address, email, password, mobile } = req.body;
-  const hashed = await bcrypt.hash(password, 10);
-  const staff = new Staff({ name, role, address, email, password: hashed, mobile });
-  await staff.save();
+  try {
+    const { name, role, address, email, password, mobile } = req.body;
 
-  await sendMail({
-    to: email,
-    subject: 'Staff Login Credentials',
-    html: `<p>Hello ${name},</p><p>Your ${role} account has been created.</p>
-           <p>Email: ${email}<br/>Password: ${password}</p>`
-  });
+    if (!name || !role || !email || !password) {
+      return res.status(400).json({ msg: "Missing required fields" });
+    }
 
-  res.json(staff);
+    const existing = await Staff.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ msg: "Email already exists!" });
+    }
+
+    const hashed = await bcrypt.hash(password, 10);
+
+    const staff = new Staff({
+      name,
+      role,
+      address,
+      email,
+      password: hashed,
+      mobile,
+      isPresent: false
+    });
+
+    await staff.save();
+
+    res.status(201).json(staff);
+
+  } catch (err) {
+    console.error("Error in addStaff:", err);
+    res.status(500).json({ msg: "Server error while adding staff" });
+  }
 };
+
 
 const deleteStaff = async (req, res) => {
   try {

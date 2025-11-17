@@ -68,36 +68,36 @@
 
 const Staff = require('../models/Staff');
 
-// ✅ Admin adds staff
-exports.addStaff = async (req, res) => {
-  try {
-    const { name, role, address, email, password, mobile } = req.body;
-    if (!name || !role || !email || !password) {
-      return res.status(400).json({ msg: 'Missing required fields' });
-    }
+// // ✅ Admin adds staff
+// exports.addStaff = async (req, res) => {
+//   try {
+//     const { name, role, address, email, password, mobile } = req.body;
+//     if (!name || !role || !email || !password) {
+//       return res.status(400).json({ msg: 'Missing required fields' });
+//     }
 
-    // prevent duplicate
-    const existing = await Staff.findOne({ email });
-    if (existing) return res.status(400).json({ msg: 'Email already exists' });
+//     // prevent duplicate
+//     const existing = await Staff.findOne({ email });
+//     if (existing) return res.status(400).json({ msg: 'Email already exists' });
 
-    const bcrypt = require('bcryptjs');
-    const hashed = await bcrypt.hash(password, 10);
+//     const bcrypt = require('bcryptjs');
+//     const hashed = await bcrypt.hash(password, 10);
 
-    const newStaff = await Staff.create({
-      name,
-      role,
-      address,
-      email,
-      password: hashed,
-      mobile,
-    });
+//     const newStaff = await Staff.create({
+//       name,
+//       role,
+//       address,
+//       email,
+//       password: hashed,
+//       mobile,
+//     });
 
-    res.status(201).json(newStaff);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: 'Error adding staff' });
-  }
-};
+//     res.status(201).json(newStaff);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ msg: 'Error adding staff' });
+//   }
+// };
 
 // ✅ Admin gets all staff
 exports.getAllStaff = async (req, res) => {
