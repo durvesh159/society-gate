@@ -497,6 +497,7 @@ export default function Residents() {
       fetchResidents();
       alert("Resident added successfully!");
     } catch (err) {
+      console.log("ADD RESIDENT ERROR:", err.response);
       alert(err.response?.data?.msg || "Error adding resident");
     } finally {
       setLoading(false);
