@@ -157,20 +157,46 @@ const addResident = async (req, res) => {
 
 
 const addGuard = async (req, res) => {
-  const { name, address, email, password, mobile } = req.body;
-  const hashed = await bcrypt.hash(password, 10);
-  const guard = new Guard({ name, address, email, password: hashed, mobile });
-  await guard.save();
+  try {
+    const { name, address, email, password, mobile } = req.body;
 
-  await sendMail({
-    to: email,
-    subject: 'Guard Login Credentials',
-    html: `<p>Hello ${name},</p><p>Your account for Society Gate System has been created.</p>
-           <p>Email: ${email}<br/>Password: ${password}</p>`
-  });
+    // Check duplicate email
+    const exists = await Guard.findOne({ email });
+    if (exists) return res.status(400).json({ msg: "Email already exists!" });
 
-  res.json(guard);
+    const hashed = await bcrypt.hash(password, 10);
+
+    const uniqueId = `GUARD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+    const guard = new Guard({
+      name,
+      address,
+      email,
+      password: hashed,
+      mobile,
+      uniqueId
+    });
+    
+
+    await guard.save();
+
+    await sendMail({
+      to: email,
+      subject: 'Guard Login Credentials',
+      html: `<p>Hello ${name},</p>
+             <p>Your account for Society Gate System has been created.</p>
+             <p>Email: ${email}<br/>Password: ${password}</p>
+             <p>Your ID: ${uniqueId}</p>`
+    });
+
+    res.json(guard);
+
+  } catch (err) {
+    console.error("addGuard error:", err);
+    res.status(500).json({ msg: "Server error while adding guard" });
+  }
 };
+
 
 const getAllGuards = async (req, res) => {
   try {
