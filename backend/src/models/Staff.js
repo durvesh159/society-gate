@@ -21,7 +21,8 @@ const bcrypt = require('bcryptjs');
 
 const StaffSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  role: { type: String, enum: ['cook', 'maid', 'gardener', 'driver'], required: true },
+  enum: ["Cook", "Maid", "Driver", "Cleaner", "Gardener", "Electrician", "Plumber", "Other"],
+  required: true,
   address: String,
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
