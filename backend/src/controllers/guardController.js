@@ -254,6 +254,7 @@ const Visitor = require('../models/Visitor');
 const Resident = require('../models/Resident');
 const { nanoid } = require('nanoid');
 const sendMail = require('../utils/mail');
+const sendSMS = require('../utils/sms');
 
 const addVisitor = async (req, res) => {
   try {

@@ -175,6 +175,7 @@
 const Visitor = require('../models/Visitor');
 const Resident = require('../models/Resident');
 const sendMail = require('../utils/mail');
+const sendSMS = require('../utils/sms');
 const crypto = require('crypto');
 
 // Pre-approve visitor (resident schedules a visit)
@@ -206,22 +207,26 @@ const preApproveVisitor = async (req, res) => {
 
     await visitor.save();
 
-    // send passcode email
-    try {
-      await sendMail({
-        to: email,
-        subject: 'Your Pre-approved Gate Entry Passcode',
-        html: `
-          <p>Dear ${name},</p>
-          <p>You are pre-approved to visit <b>${resident.name}</b> (${flatKey}).</p>
-          <p>Your entry passcode: <b>${passcode}</b></p>
-          <p>Please show this at the gate. This passcode is valid for one use.</p>
-        `
-      });
-    } catch (mailErr) {
-      // log but do not fail whole request
-      console.warn('Failed to send passcode email:', mailErr);
-    }
+    // Send SMS + Email (passcode to both)
+const smsMsg = `OTP for your mobile verification is ${passcode}. It will be valid for 1 minutes.`;
+
+sendSMS(mobile, smsMsg); // send SMS
+
+try {
+  await sendMail({
+    to: email,
+    subject: "Your Pre-approved Gate Entry Passcode",
+    html: `
+      <p>Dear ${name},</p>
+      <p>You are pre-approved to visit <b>${resident.name}</b> (${flatKey}).</p>
+      <p>Your entry passcode: <b>${passcode}</b></p>
+      <p>Please show this at the gate. This passcode is valid for one use.</p>
+    `,
+  });
+} catch (mailErr) {
+  console.warn("Failed to send passcode email:", mailErr);
+}
+
 
     // notify via socket
     const io = req.app.get('io');
