@@ -20,11 +20,13 @@ export default function GuardStaffAttendance() {
 
   const markEntry = async (id) => {
     await API.post("/staff/entry", { staffId: id });
+    fetchStaff(); 
     fetchHistory();
   };
 
   const markExit = async (id) => {
     await API.post("/staff/exit", { staffId: id });
+    fetchStaff(); 
     fetchHistory();
   };
 
