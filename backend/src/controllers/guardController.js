@@ -260,83 +260,73 @@ const addVisitor = async (req, res) => {
   try {
     const { name, mobile, purpose, flatVisited, preapproved } = req.body;
     const guardId = req.user.id;
-    const io = req.app.get('io');
+    const io = req.app.get("io");
 
-    // try find resident by flatVisited (match either flatNo or wing-flatNo)
+    // Try to find resident linked to that flat
     const resident = await Resident.findOne({
       $or: [
         { flatNo: flatVisited },
-        { $expr: { $eq: [ { $concat: [ "$wing", "-", "$flatNo" ] }, flatVisited ] } }
+        { 
+          $expr: { 
+            $eq: [ { $concat: [ "$wing", "-", "$flatNo" ] }, flatVisited ] 
+          } 
+        }
       ]
     });
 
-    if (!resident) {
-      // If resident not found by exact field, attempt simple flatNo lookup
-      // (existing data may vary in shape)
-      // Allow guard to add visitor even if resident not located — keep record
-      const passcode = preapproved ? nanoid(6) : null;
-      const visitor = new Visitor({
-        name,
-        mobile,
-        purpose,
-        flatVisited,
-        preapproved: !!preapproved,
-        passcode,
-        guard: guardId,
-        status: preapproved ? 'preapproved' : 'pending'
-      });
-      await visitor.save();
-      if (!preapproved && resident && resident.email) {
-        try {
-          await sendMail({
-            to: resident.email,
-            subject: 'Visitor Approval Request',
-            html: `<p>Visitor ${name} requested to visit ${flatVisited}.</p>`
-          });
-        } catch(e) { console.warn('mail failed', e); }
-      }
-      if (io) io.emit('visitorUpdate', { action: 'newVisitor', visitor });
-      return res.json({ msg: 'Visitor added (resident not matched)', visitor });
-    }
-
-    // create visitor linked to resident
+    // Create visitor record
     const passcode = preapproved ? nanoid(6) : null;
-    const visitor = new Visitor({
+    const visitorData = {
       name,
       mobile,
       purpose,
       flatVisited,
-      resident: resident._id,
-      guard: guardId,
       preapproved: !!preapproved,
       passcode,
-      status: preapproved ? 'preapproved' : 'pending'
-    });
+      guard: guardId,
+      status: preapproved ? "preapproved" : "pending",
+      resident: resident?._id || undefined
+    };
 
+    const visitor = new Visitor(visitorData);
     await visitor.save();
 
-    // Send approval request to resident for walk-in visitors
-    if (!preapproved && resident.email) {
-      try {
-        await sendMail({
-          to: resident.email,
-          subject: 'Visitor Approval Request',
-          html: `
-            <p>Dear ${resident.name},</p>
-            <p>A visitor <b>${name}</b> (purpose: ${purpose}) is waiting to visit ${flatVisited}.</p>
-            <p>Please login to approve or reject.</p>
-          `
-        });
-      } catch (mailErr) {
-        console.warn('mail send failed', mailErr);
+    // -----------------------------------------------
+    //  SEND SMS + EMAIL NOTIFICATION TO RESIDENT
+    // -----------------------------------------------
+    if (!preapproved && resident) {
+      // ============= SMS =============
+      if (resident.mobile) {
+        const smsMsg = `A new visitor ${name} wants to visit your flat ${flatVisited}. Please login to Society App and Allow/Reject.`;
+        sendSMS(resident.mobile, smsMsg);
+      }
+
+      // ============= EMAIL =============
+      if (resident.email) {
+        try {
+          await sendMail({
+            to: resident.email,
+            subject: "Visitor Approval Request",
+            html: `
+              <p>Dear ${resident.name},</p>
+              <p>Visitor <b>${name}</b> (purpose: ${purpose}) is waiting at your gate.</p>
+              <p>Please login to approve or reject.</p>
+            `
+          });
+        } catch (mailErr) {
+          console.warn("Email sending failed:", mailErr);
+        }
       }
     }
 
-    if (io) io.emit('visitorUpdate', { action: 'newVisitor', visitor });
-    return res.json({ msg: 'Visitor added', visitor });
+    // Push real-time update
+    if (io) io.emit("visitorUpdate", { action: "newVisitor", visitor });
+
+    return res.json({ msg: "Visitor added successfully", visitor });
+
   } catch (err) {
-    console.error('addVisitor error:', err);
-    return res.status(500).json({ msg: 'Server error' });
+    console.error("addVisitor error:", err);
+    return res.status(500).json({ msg: "Server error" });
   }
 };
 
