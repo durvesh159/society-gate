@@ -1,4 +1,4 @@
-const GuardAttendance = require("../models/Attendance");
+const { GuardAttendance } = require("../models/Attendance");
 const Guard = require("../models/Guard");
 
 // Guard checks in

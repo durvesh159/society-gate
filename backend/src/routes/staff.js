@@ -28,6 +28,7 @@ const auth = require('../middleware/auth');
 const { permit } = require('../middleware/roles');
 const staffController = require('../controllers/staffController');
 
+
 const {
   addStaff,
   getAllStaff,
@@ -43,7 +44,6 @@ router.get("/all", getAllStaff);
 // DELETE STAFF
 router.delete("/:id", deleteStaff);
 
-module.exports = router;
 
 // Guard routes
 router.post('/entry', auth, permit('guard'), staffController.markEntry);

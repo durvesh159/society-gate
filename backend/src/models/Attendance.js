@@ -12,5 +12,10 @@ const StaffAttendanceSchema = new mongoose.Schema({
   exitTime: { type: Date }
 }, { timestamps: true });
 
-module.exports = mongoose.model("GuardAttendance", GuardAttendanceSchema);
-module.exports = mongoose.model("StaffAttendance", StaffAttendanceSchema);
+const GuardAttendance = mongoose.model("GuardAttendance", GuardAttendanceSchema);
+const StaffAttendance = mongoose.model("StaffAttendance", StaffAttendanceSchema);
+
+module.exports = {
+  GuardAttendance,
+  StaffAttendance
+};

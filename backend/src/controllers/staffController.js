@@ -101,6 +101,9 @@
 
 
 const Staff = require('../models/Staff');
+const { StaffAttendance } = require("../models/Attendance");
+
+
 
 // ✅ Admin gets all staff
 exports.getAllStaff = async (req, res) => {
