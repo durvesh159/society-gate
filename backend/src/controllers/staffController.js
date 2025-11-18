@@ -66,7 +66,7 @@
 // };
 
 
-const Staff = require('../models/Staff');
+
 
 // // ✅ Admin adds staff
 // exports.addStaff = async (req, res) => {
@@ -98,6 +98,9 @@ const Staff = require('../models/Staff');
 //     res.status(500).json({ msg: 'Error adding staff' });
 //   }
 // };
+
+
+const Staff = require('../models/Staff');
 
 // ✅ Admin gets all staff
 exports.getAllStaff = async (req, res) => {
@@ -149,6 +152,37 @@ exports.markExit = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: 'Error marking exit' });
+  }
+};
+
+// ===============================
+// GET ATTENDANCE HISTORY
+// ===============================
+exports.getStaffAttendanceHistory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const history = await StaffAttendance.find({ staff: id })
+      .populate("staff")
+      .sort({ createdAt: -1 });
+
+    res.json(history);
+  } catch (err) {
+    res.status(500).json({ msg: 'Error fetching history' });
+  }
+};
+
+// ===============================
+// GET ALL STAFF ATTENDANCE (FOR GUARD)
+// ===============================
+exports.getAllStaffAttendance = async (req, res) => {
+  try {
+    const history = await StaffAttendance.find()
+      .populate("staff")
+      .sort({ createdAt: -1 });
+
+    res.json(history);
+  } catch (err) {
+    res.status(500).json({ msg: 'Error fetching history' });
   }
 };
 

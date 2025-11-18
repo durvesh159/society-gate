@@ -224,9 +224,11 @@ const Sidebar = ({ role, onLogout }) => {
       { name: "Dashboard", path: "/guard", icon: <FiHome /> },
       { name: "Visitors", path: "/guard/visitors", icon: <FiUsers /> },
       { name: "My Attendance", path: "/guard/attendance", icon: <FiClock /> },
+      { name: "Staff Attendance", path: "/guard/staff-attendance", icon: <FiUsers /> },
     ],
     staff: [
       { name: "Dashboard", path: "/staff", icon: <FiHome /> },
+      { name: "Attendance", path: "/staff/attendance", icon: <FiClock /> },
     ],
   };
 

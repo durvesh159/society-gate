@@ -52,5 +52,11 @@ router.post('/exit', auth, permit('guard'), staffController.markExit);
 // Staff routes
 router.get('/profile/:id', auth, permit('staff', 'admin'), staffController.getStaffProfile);
 
+// Staff Attendance For Staff
+router.get("/attendance/:id", auth, permit("staff"), staffController.getStaffAttendanceHistory);
+
+// Guard can see all staff attendance
+router.get("/attendance", auth, permit("guard"), staffController.getAllStaffAttendance);
+
 
 module.exports = router;

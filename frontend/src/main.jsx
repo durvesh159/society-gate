@@ -371,6 +371,10 @@ import Staff from './pages/admin/Staff';
 import GuardAttendance from "./pages/guard/GuardAttendance";
 import AdminGuardAttendance from "./pages/admin/GuardAttendance";
 
+// NEW: Staff attendance pages (guard view + staff view)
+import GuardStaffAttendance from "./pages/guard/StaffAttendance";
+import StaffAttendance from "./pages/staff/StaffAttendance";
+
 const Protected = ({ children, role, user }) => {
   if (!user) return <Navigate to="/login" />;
   if (role && user.role !== role) return <Navigate to="/login" />;
@@ -508,6 +512,20 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
 
+          {/* ⭐ GUARD: STAFF ATTENDANCE (mark entry/exit + history) */}
+          <Route
+            path="/guard/staff-attendance"
+            element={
+              <AuthContext.Consumer>
+                {({ user }) => (
+                  <Protected role="guard" user={user}>
+                    <GuardStaffAttendance />
+                  </Protected>
+                )}
+              </AuthContext.Consumer>
+            }
+          />
+
           {/* ========================= RESIDENT ========================= */}
           <Route
             path="/resident"
@@ -543,6 +561,20 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 {({ user }) => (
                   <Protected role="staff" user={user}>
                     <StaffDashboard />
+                  </Protected>
+                )}
+              </AuthContext.Consumer>
+            }
+          />
+
+           {/* ⭐ STAFF: My Attendance */}
+          <Route
+            path="/staff/attendance"
+            element={
+              <AuthContext.Consumer>
+                {({ user }) => (
+                  <Protected role="staff" user={user}>
+                    <StaffAttendance />
                   </Protected>
                 )}
               </AuthContext.Consumer>
