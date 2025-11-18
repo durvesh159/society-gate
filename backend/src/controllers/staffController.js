@@ -116,45 +116,68 @@ exports.getAllStaff = async (req, res) => {
   }
 };
 
-// ✅ Guard marks staff entry
+// Guard marks staff entry
 exports.markEntry = async (req, res) => {
   try {
+    console.log("🔍 markEntry BODY:", req.body);
+
     const { staffId } = req.body;
     const staff = await Staff.findById(staffId);
+
     if (!staff) return res.status(404).json({ msg: 'Staff not found' });
 
     staff.entryTime = new Date();
     staff.isPresent = true;
     await staff.save();
 
-    const io = req.app.get('io');
-    if (io) io.emit('staffUpdate', { action: 'entry', staff });
+    await StaffAttendance.create({
+      staff: staffId,
+      entryTime: new Date(),
+      exitTime: null
+    });
+
+    console.log("✅ ENTRY SAVED FOR STAFF:", staffId);
 
     res.json({ msg: 'Entry marked', staff });
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: 'Error marking entry' });
+    console.log("🔥 ERROR IN markEntry:", err);
+    res.status(500).json({ msg: 'Error marking entry', error: err.message });
   }
 };
 
-// ✅ Guard marks staff exit
+// Guard marks staff exit
 exports.markExit = async (req, res) => {
   try {
+    console.log("🔍 markExit BODY:", req.body);
+
     const { staffId } = req.body;
     const staff = await Staff.findById(staffId);
+
     if (!staff) return res.status(404).json({ msg: 'Staff not found' });
+
+    const record = await StaffAttendance.findOne({
+      staff: staffId,
+      exitTime: null
+    });
+
+    if (record) {
+      record.exitTime = new Date();
+      await record.save();
+      console.log("✅ EXIT TIME UPDATED:", record._id);
+    } else {
+      console.log("⚠️ No open attendance record for:", staffId);
+    }
 
     staff.exitTime = new Date();
     staff.isPresent = false;
     await staff.save();
 
-    const io = req.app.get('io');
-    if (io) io.emit('staffUpdate', { action: 'exit', staff });
-
     res.json({ msg: 'Exit marked', staff });
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: 'Error marking exit' });
+    console.log("🔥 ERROR IN markExit:", err);
+    res.status(500).json({ msg: 'Error marking exit', error: err.message });
   }
 };
 
