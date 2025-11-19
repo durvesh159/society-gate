@@ -55,7 +55,7 @@ const DashboardLayout = ({ children, role, onLogout }) => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 text-gray-900">
+    <div className="flex h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
       <Sidebar role={role} onLogout={onLogout} />
 
       <div className="flex-1 flex flex-col overflow-auto">
