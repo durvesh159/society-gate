@@ -154,6 +154,7 @@ const { Server } = require('socket.io');
 const connectDB = require('./config/db');
 const seedAdmin = require('./utils/seedAdmin');
 
+
 const app = express();
 
 // 💥 Moved allowedOrigins ABOVE everything
