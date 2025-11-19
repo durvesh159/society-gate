@@ -79,7 +79,7 @@ const DashboardLayout = ({ children, role, onLogout }) => {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4">{children}</main>
+        <main className="flex-1 overflow-y-auto ">{children}</main>
       </div>
 
       {/* News Modal */}
