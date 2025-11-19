@@ -1,6 +1,7 @@
-//import Flat from "../models/Flat.js";
-const Flat = require("../models/Flat")
-export const addFlat = async (req, res) => {
+const Flat = require("../models/Flat");
+
+// ADD NEW FLAT
+const addFlat = async (req, res) => {
   try {
     const { bhk, area, price, furnished, availableFrom, description, images } = req.body;
 
@@ -17,7 +18,7 @@ export const addFlat = async (req, res) => {
       furnished,
       availableFrom,
       description,
-      images,
+      images, // base64 array
     });
 
     res.json(flat);
@@ -26,7 +27,8 @@ export const addFlat = async (req, res) => {
   }
 };
 
-export const getAllFlats = async (req, res) => {
+// GET ALL FLATS
+const getAllFlats = async (req, res) => {
   try {
     const flats = await Flat.find().sort({ featured: -1, createdAt: -1 });
     res.json(flats);
@@ -35,18 +37,27 @@ export const getAllFlats = async (req, res) => {
   }
 };
 
-export const markFeatured = async (req, res) => {
+// MARK FEATURED (ADMIN ONLY)
+const markFeatured = async (req, res) => {
   try {
-    if (req.user.role !== "admin") return res.status(403).json({ msg: "Forbidden" });
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ msg: "Forbidden" });
+    }
 
-    const flat = await Flat.findByIdAndUpdate(req.params.id, { featured: true }, { new: true });
+    const flat = await Flat.findByIdAndUpdate(
+      req.params.id,
+      { featured: true },
+      { new: true }
+    );
+
     res.json(flat);
   } catch (err) {
     res.status(500).json({ msg: "Error updating flat" });
   }
 };
 
-export const markAsRented = async (req, res) => {
+// MARK AS RENTED
+const markAsRented = async (req, res) => {
   try {
     const flat = await Flat.findById(req.params.id);
 
@@ -63,4 +74,12 @@ export const markAsRented = async (req, res) => {
   } catch (err) {
     res.status(500).json({ msg: "Error marking rented" });
   }
+};
+
+// EXPORTS (CJS)
+module.exports = {
+  addFlat,
+  getAllFlats,
+  markFeatured,
+  markAsRented
 };

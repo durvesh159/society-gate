@@ -1,13 +1,22 @@
-const express = require('express');
-//import { addFlat, getAllFlats, markFeatured, markAsRented } from "../controllers/flatController.js";
-const { addFlat, getAllFlats, markFeatured, markAsRented } = require("../controllers/flatController.js")
-const auth = require('../middleware/auth');
-
+const express = require("express");
 const router = express.Router();
 
-router.post("/add", auth, addFlat);            // admin + resident
-router.get("/", auth, getAllFlats);            // admin + resident
-router.put("/featured/:id", auth, markFeatured);   // admin only
-router.put("/rented/:id", auth, markAsRented);     // owner + admin
+const { addFlat, getAllFlats, markFeatured, markAsRented } =
+  require("../controllers/flatController");
+
+const auth = require("../middleware/auth");
+const roles = require("../middleware/roles");
+
+// Only Admin + Resident can list flats
+router.post("/add", auth, roles("admin", "resident"), addFlat);
+
+// Everyone except guard/staff can view
+router.get("/", auth, roles("admin", "resident"), getAllFlats);
+
+// Admin only
+router.patch("/feature/:id", auth, roles("admin"), markFeatured);
+
+// Owner or Admin
+router.patch("/rented/:id", auth, markAsRented);
 
 module.exports = router;
