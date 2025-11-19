@@ -81,6 +81,7 @@
 
 import React, { useEffect, useState, useContext } from "react";
 import API from "../api/api";
+import DashboardLayout from "../../components/DashboardLayout";
 import { AuthContext } from "../contexts/AuthContext";
 
 const Flats = () => {
