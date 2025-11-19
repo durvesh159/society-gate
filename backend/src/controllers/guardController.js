@@ -297,7 +297,7 @@ const addVisitor = async (req, res) => {
     if (!preapproved && resident) {
       // ============= SMS =============
       if (resident.mobile) {
-        const smsMsg = `A new visitor ${name} wants to visit your flat ${flatVisited}. Please login to Society App and Allow/Reject.`;
+        const smsMsg = `OTP for your mobile verification is ${name}${flatVisited}. It will be valid for 1 minutes.`;
         sendSMS(resident.mobile, smsMsg);
       }
 
