@@ -791,9 +791,9 @@ export default function AdminDashboard() {
       <div className="p-8 min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
 
         {/* TITLE */}
-        <h1 className="text-4xl font-extrabold text-purple-900 mb-10 tracking-wide drop-shadow-sm">
+        {/* <h1 className="text-4xl font-extrabold text-purple-900 mb-10 tracking-wide drop-shadow-sm">
           Admin Dashboard
-        </h1>
+        </h1> */}
 
         {/* STATS CARDS */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12">
