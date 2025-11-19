@@ -10,4 +10,4 @@ router.get("/", auth, getAllFlats);            // admin + resident
 router.put("/featured/:id", auth, markFeatured);   // admin only
 router.put("/rented/:id", auth, markAsRented);     // owner + admin
 
-export default router;
+module.exports = router;
