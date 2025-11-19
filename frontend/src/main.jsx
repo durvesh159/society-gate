@@ -375,6 +375,10 @@ import AdminGuardAttendance from "./pages/admin/GuardAttendance";
 import GuardStaffAttendance from "./pages/guard/StaffAttendance";
 import StaffAttendance from "./pages/staff/StaffAttendance";
 
+import NewsList from "./pages/NewsList";
+import AddNews from "./pages/admin/AddNews";
+
+
 const Protected = ({ children, role, user }) => {
   if (!user) return <Navigate to="/login" />;
   if (role && user.role !== role) return <Navigate to="/login" />;
@@ -580,6 +584,28 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               </AuthContext.Consumer>
             }
           />
+
+{/* ⭐ News Pages */}
+          <Route path="/news" element={
+  <AuthContext.Consumer>
+    {({ user }) => (
+      <Protected user={user}>
+        <NewsList />
+      </Protected>
+    )}
+  </AuthContext.Consumer>
+} />
+
+<Route path="/news/add" element={
+  <AuthContext.Consumer>
+    {({ user }) => (
+      <Protected role="admin" user={user}>
+        <AddNews />
+      </Protected>
+    )}
+  </AuthContext.Consumer>
+} />
+
 
         </Routes>
       </BrowserRouter>
