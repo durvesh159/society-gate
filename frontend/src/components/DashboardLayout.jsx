@@ -108,7 +108,7 @@ const DashboardLayout = ({ children, role, onLogout }) => {
       <div className="flex-1 flex flex-col overflow-auto">
 
         {/* ⭐ TOP NAVBAR - Perfectly Matching Theme */}
-        <header className="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-50 backdrop-blur-xl shadow-lg border-b border-purple-200/40 px-6 py-4 flex justify-between items-center">
+        <header className="bg-gradient-to-br from-purple-300 via-blue-50 to-purple-300 backdrop-blur-xl shadow-lg border-b border-purple-200/40 px-6 py-4 flex justify-between items-center">
 
           <h1 className="text-2xl font-bold text-purple-900 tracking-wide capitalize">
             {role} Dashboard
