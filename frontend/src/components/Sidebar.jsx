@@ -308,14 +308,14 @@ const Sidebar = ({ role, onLogout }) => {
       { name: "Visitors", path: "/admin/visitors", icon: <FiEye /> },
       { name: "Guard Attendance", path: "/admin/attendance", icon: <FiClock /> },
       { name: "Rent Flats", path: "/rent", icon: <FiHome /> },
-{ name: "Add Flat", path: "/rent/add", icon: <FiHome /> },
+//{ name: "Add Flat", path: "/rent/add", icon: <FiHome /> },
 
     ],
     resident: [
       { name: "Dashboard", path: "/resident", icon: <FiHome /> },
       { name: "Visitors", path: "/resident/visitors", icon: <FiUsers /> },
       { name: "Rent Flats", path: "/rent", icon: <FiHome /> },
-{ name: "Add Flat", path: "/rent/add", icon: <FiHome /> },
+//{ name: "Add Flat", path: "/rent/add", icon: <FiHome /> },
 
     ],
     guard: [
