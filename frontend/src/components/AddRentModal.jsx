@@ -24,20 +24,43 @@ export default function AddRentModal({ onClose, prefill }) {
     setImages(Array.from(e.target.files).slice(0,5));
   };
 
+  const toBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);  // this gives: data:image/png;base64,xxxx
+    reader.onerror = (err) => reject(err);
+  });
+
+
   const submit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const fd = new FormData();
-      Object.entries(form).forEach(([k,v]) => { if (v !== "") fd.append(k, v); });
-      images.forEach(img => fd.append("images", img));
-      const res = await API.post("/rent", fd, { headers: { "Content-Type": "multipart/form-data" }});
-      onClose();
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.msg || "Error posting");
-    } finally { setLoading(false); }
-  };
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+    const base64Images = [];
+    for (const img of images) {
+      const b64 = await toBase64(img);
+      base64Images.push(b64);
+    }
+
+    const payload = {
+      ...form,
+      images: base64Images
+    };
+
+    await API.post("/rent", payload);
+
+    onClose();
+
+  } catch (err) {
+    console.error(err);
+    alert(err.response?.data?.msg || "Error posting");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
