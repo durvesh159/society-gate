@@ -1,5 +1,5 @@
-import Flat from "../models/Flat.js";
-
+//import Flat from "../models/Flat.js";
+const Flat = require("../models/Flat")
 export const addFlat = async (req, res) => {
   try {
     const { bhk, area, price, furnished, availableFrom, description, images } = req.body;
