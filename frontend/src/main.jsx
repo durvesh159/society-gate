@@ -371,12 +371,13 @@ import Staff from './pages/admin/Staff';
 import GuardAttendance from "./pages/guard/GuardAttendance";
 import AdminGuardAttendance from "./pages/admin/GuardAttendance";
 
-// NEW: Staff attendance pages (guard view + staff view)
+// Staff attendance pages
 import GuardStaffAttendance from "./pages/guard/StaffAttendance";
 import StaffAttendance from "./pages/staff/StaffAttendance";
 
-import NewsList from "./pages/NewsList";
-import AddNews from "./pages/admin/AddNews";
+// ❌ REMOVED (no longer needed)
+// import NewsList from "./pages/NewsList";
+// import AddNews from "./pages/admin/AddNews";
 
 
 const Protected = ({ children, role, user }) => {
@@ -461,7 +462,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
 
-          {/* ⭐ NEW ADMIN ATTENDANCE ROUTE */}
+          {/* ADMIN ATTENDANCE */}
           <Route
             path="/admin/attendance"
             element={
@@ -502,7 +503,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
 
-          {/* ⭐ NEW GUARD ATTENDANCE ROUTE */}
           <Route
             path="/guard/attendance"
             element={
@@ -516,7 +516,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
 
-          {/* ⭐ GUARD: STAFF ATTENDANCE (mark entry/exit + history) */}
+          {/* GUARD: STAFF ATTENDANCE */}
           <Route
             path="/guard/staff-attendance"
             element={
@@ -530,7 +530,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
 
-          {/* ========================= RESIDENT ========================= */}
+          {/* ========================= RESIDENT ROUTES ========================= */}
           <Route
             path="/resident"
             element={
@@ -557,7 +557,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
 
-          {/* ========================= STAFF ========================= */}
+          {/* ========================= STAFF ROUTES ========================= */}
           <Route
             path="/staff"
             element={
@@ -571,7 +571,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
 
-           {/* ⭐ STAFF: My Attendance */}
+          {/* STAFF: Attendance */}
           <Route
             path="/staff/attendance"
             element={
@@ -585,30 +585,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
 
-{/* ⭐ News Pages */}
-          <Route path="/news" element={
-  <AuthContext.Consumer>
-    {({ user }) => (
-      <Protected user={user}>
-        <NewsList />
-      </Protected>
-    )}
-  </AuthContext.Consumer>
-} />
-
-<Route path="/news/add" element={
-  <AuthContext.Consumer>
-    {({ user }) => (
-      <Protected role="admin" user={user}>
-        <AddNews />
-      </Protected>
-    )}
-  </AuthContext.Consumer>
-} />
-
-
+          {/* ❌ REMOVED NEWS ROUTES */}
         </Routes>
       </BrowserRouter>
     </AuthProvider>
   </React.StrictMode>
 );
+
