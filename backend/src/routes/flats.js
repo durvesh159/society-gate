@@ -5,18 +5,18 @@ const { addFlat, getAllFlats, markFeatured, markAsRented } =
   require("../controllers/flatController");
 
 const auth = require("../middleware/auth");
-const roles = require("../middleware/roles");
+const { permit } = require("../middleware/roles");
 
 // Only Admin + Resident can list flats
-router.post("/add", auth, roles("admin", "resident"), addFlat);
+router.post("/add", auth, permit("admin", "resident"), addFlat);
 
-// Everyone except guard/staff can view
-router.get("/", auth, roles("admin", "resident"), getAllFlats);
+// View flats - only admin & residents
+router.get("/", auth, permit("admin", "resident"), getAllFlats);
 
-// Admin only
-router.patch("/feature/:id", auth, roles("admin"), markFeatured);
+// Admin marks featured
+router.patch("/feature/:id", auth, permit("admin"), markFeatured);
 
-// Owner or Admin
+// Owner or Admin can mark rented
 router.patch("/rented/:id", auth, markAsRented);
 
 module.exports = router;
