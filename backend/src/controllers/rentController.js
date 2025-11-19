@@ -93,6 +93,7 @@ exports.createRent = async (req, res) => {
       images: images || [], // base64 array
       featured: false
     });
+console.log("Reached createRent");
 
     const io = req.app.get("io");
     if (io) io.emit("rentCreated", rent);
