@@ -375,7 +375,10 @@ import AdminGuardAttendance from "./pages/admin/GuardAttendance";
 import GuardStaffAttendance from "./pages/guard/StaffAttendance";
 import StaffAttendance from "./pages/staff/StaffAttendance";
 
-import RentList from "./pages/rent/RentList";
+import Flats from "./pages/Flats";
+import AddFlat from "./pages/AddFlat";
+
+
 
 // ❌ REMOVED (no longer needed)
 // import NewsList from "./pages/NewsList";
@@ -594,7 +597,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       {({ user }) => (
         <Protected user={user}>
           {(user.role === "admin" || user.role === "resident") ? (
-            <RentList />
+            <Flats />
           ) : (
             <Navigate to="/login" />
           )}
@@ -604,6 +607,22 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   }
 />
 
+<Route
+  path="/rent/add"
+  element={
+    <AuthContext.Consumer>
+      {({ user }) => (
+        <Protected user={user}>
+          {(user.role === "admin" || user.role === "resident") ? (
+            <AddFlat />
+          ) : (
+            <Navigate to="/login" />
+          )}
+        </Protected>
+      )}
+    </AuthContext.Consumer>
+  }
+/>
 
 
           {/* ❌ REMOVED NEWS ROUTES */}

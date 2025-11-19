@@ -187,6 +187,7 @@ app.use(cors({
 }));
 
 //app.use(express.json());
+// increase payload size to accept Base64 images
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
@@ -203,7 +204,7 @@ app.use('/api/password', require('./routes/password'));
 app.use('/api/staff', require('./routes/staff'));
 app.use('/api/attendance', require('./routes/attendance'));
 app.use("/api/news", require("./routes/news"));
-app.use("/api/rent", require("./routes/rent"));
+app.use("/api/flats", require("./routes/flats"));
 
 
 

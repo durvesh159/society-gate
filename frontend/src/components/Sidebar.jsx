@@ -290,7 +290,7 @@
 
 // src/components/Sidebar.jsx
 import React from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { 
   FiHome, FiUsers, FiShield, FiTool, 
   FiLogOut, FiEye, FiClock
@@ -298,7 +298,6 @@ import {
 
 const Sidebar = ({ role, onLogout }) => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const menuItems = {
     admin: [
@@ -308,10 +307,16 @@ const Sidebar = ({ role, onLogout }) => {
       { name: "Staff", path: "/admin/staff", icon: <FiTool /> },
       { name: "Visitors", path: "/admin/visitors", icon: <FiEye /> },
       { name: "Guard Attendance", path: "/admin/attendance", icon: <FiClock /> },
+      { name: "Rent Flats", path: "/rent", icon: <FiHome /> },
+{ name: "Add Flat", path: "/rent/add", icon: <FiHome /> },
+
     ],
     resident: [
       { name: "Dashboard", path: "/resident", icon: <FiHome /> },
       { name: "Visitors", path: "/resident/visitors", icon: <FiUsers /> },
+      { name: "Rent Flats", path: "/rent", icon: <FiHome /> },
+{ name: "Add Flat", path: "/rent/add", icon: <FiHome /> },
+
     ],
     guard: [
       { name: "Dashboard", path: "/guard", icon: <FiHome /> },
@@ -351,20 +356,7 @@ const Sidebar = ({ role, onLogout }) => {
           </li>
         ))}
 
-        {/* ⭐ RENT FLATS BUTTON */}
-        {(role === "admin" || role === "resident") && (
-          <li>
-            <button
-              onClick={() => navigate("/rent")}
-              className="flex items-center gap-3 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 transition-all w-full"
-            >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M3 10.5L12 4l9 6.5v7A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5v-7z"></path>
-              </svg>
-              <span>Rent Flats</span>
-            </button>
-          </li>
-        )}
+        
       </ul>
 
       {/* Logout */}
