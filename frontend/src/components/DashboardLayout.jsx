@@ -55,12 +55,12 @@ const DashboardLayout = ({ children, role, onLogout }) => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
+    <div className="flex h-screen bg-gray-100 text-gray-900">
       <Sidebar role={role} onLogout={onLogout} />
 
       <div className="flex-1 flex flex-col overflow-auto">
         {/* TOP NAVBAR */}
-        <header className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
+        <header className="bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 shadow-md px-6 py-4 flex justify-between items-center">
           <h1 className="text-xl font-semibold capitalize">{role} Dashboard</h1>
 
           {/* NEWS BUTTON (Visible to all roles) */}
