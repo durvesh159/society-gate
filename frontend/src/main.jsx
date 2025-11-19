@@ -587,15 +587,23 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
 
-          <Route path="/rent" element={
-  <AuthContext.Consumer>
-    {({ user }) => (
-      <Protected user={user}>
-        <RentList />
-      </Protected>
-    )}
-  </AuthContext.Consumer>
-} />
+          <Route
+  path="/rent"
+  element={
+    <AuthContext.Consumer>
+      {({ user }) => (
+        <Protected user={user}>
+          {(user.role === "admin" || user.role === "resident") ? (
+            <RentList />
+          ) : (
+            <Navigate to="/login" />
+          )}
+        </Protected>
+      )}
+    </AuthContext.Consumer>
+  }
+/>
+
 
 
           {/* ❌ REMOVED NEWS ROUTES */}
