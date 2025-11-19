@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { addFlat, getAllFlats, markFeatured, markAsRented } =
+const { addFlat, getAllFlats, markFeatured, markAsRented, deleteFlat } =
   require("../controllers/flatController");
 
 const auth = require("../middleware/auth");
@@ -18,5 +18,8 @@ router.patch("/feature/:id", auth, permit("admin"), markFeatured);
 
 // Owner or Admin can mark rented
 router.patch("/rented/:id", auth, markAsRented);
+
+router.delete("/:id", auth, deleteFlat);
+
 
 module.exports = router;

@@ -76,10 +76,29 @@ const markAsRented = async (req, res) => {
   }
 };
 
+// DELETE FLAT
+const deleteFlat = async (req, res) => {
+  try {
+    const flat = await Flat.findById(req.params.id);
+    if (!flat) return res.status(404).json({ msg: "Flat not found" });
+
+    if (flat.ownerId.toString() !== req.user.id && req.user.role !== "admin") {
+      return res.status(403).json({ msg: "Not allowed" });
+    }
+
+    await Flat.findByIdAndDelete(req.params.id);
+    res.json({ msg: "Deleted" });
+  } catch (err) {
+    res.status(500).json({ msg: "Error deleting flat" });
+  }
+};
+
+
 // EXPORTS (CJS)
 module.exports = {
   addFlat,
   getAllFlats,
   markFeatured,
-  markAsRented
+  markAsRented,
+  deleteFlat
 };

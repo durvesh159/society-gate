@@ -376,7 +376,7 @@ import GuardStaffAttendance from "./pages/guard/StaffAttendance";
 import StaffAttendance from "./pages/staff/StaffAttendance";
 
 import Flats from "./pages/Flats";
-import AddFlat from "./pages/AddFlat";
+//import AddFlat from "./pages/AddFlat";
 
 
 
@@ -607,7 +607,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   }
 />
 
-<Route
+{/* <Route
   path="/rent/add"
   element={
     <AuthContext.Consumer>
@@ -622,7 +622,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       )}
     </AuthContext.Consumer>
   }
-/>
+/> */}
 
 
           {/* ❌ REMOVED NEWS ROUTES */}
