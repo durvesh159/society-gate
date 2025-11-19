@@ -153,6 +153,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const connectDB = require('./config/db');
 const seedAdmin = require('./utils/seedAdmin');
+const path = require('path');
 
 
 const app = express();
@@ -200,6 +201,10 @@ app.use('/api/password', require('./routes/password'));
 app.use('/api/staff', require('./routes/staff'));
 app.use('/api/attendance', require('./routes/attendance'));
 app.use("/api/news", require("./routes/news"));
+
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads"))); // serve images
+app.use("/api/rent", require("./routes/rent"));
+
 
 
 app.get('/', (req, res) => res.send('Society Gate API'));
