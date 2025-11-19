@@ -1,4 +1,4 @@
-import express from "express";
+const express = require('express');
 import { addFlat, getAllFlats, markFeatured, markAsRented } from "../controllers/flatController.js";
 import auth from "../middleware/auth.js";
 
