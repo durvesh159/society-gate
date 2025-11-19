@@ -1,6 +1,7 @@
 const express = require('express');
-import { addFlat, getAllFlats, markFeatured, markAsRented } from "../controllers/flatController.js";
-import auth from "../middleware/auth.js";
+//import { addFlat, getAllFlats, markFeatured, markAsRented } from "../controllers/flatController.js";
+const { addFlat, getAllFlats, markFeatured, markAsRented } = require("../controllers/flatController.js")
+const auth = require('../middleware/auth');
 
 const router = express.Router();
 
