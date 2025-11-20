@@ -296,7 +296,7 @@
 
 
 
-
+//frontend/Flats.jsx
 import React, { useEffect, useState, useContext } from "react";
 import API from "../api/api";
 import DashboardLayout from "../components/DashboardLayout";
@@ -444,9 +444,16 @@ export default function Flats() {
                   ★ Featured
                 </span>
               )}
+              {f.isRented && (
+  <span className="bg-red-500 text-white px-2 py-1 rounded-full font-semibold absolute mt-2 ml-2">
+    Rented
+  </span>
+)}
+
 
               <img
-                src={f.images[0]}
+                //src={f.images[0]}
+                src={`data:image/jpeg;base64,${f.images[0]}`}
                 className="h-52 w-full object-cover rounded-2xl mt-3 shadow"
               />
 
@@ -469,7 +476,9 @@ export default function Flats() {
             <h2 className="text-2xl font-bold text-purple-900">{viewModal.bhk} BHK Apartment</h2>
 
             <img
-              src={viewModal.images[0]}
+              //src={viewModal.images[0]}
+              // eslint-disable-next-line no-undef
+              src={`data:image/jpeg;base64,${f.images[0]}`}
               className="w-full rounded-2xl shadow"
             />
 
@@ -495,16 +504,22 @@ export default function Flats() {
               </button>
             )}
 
-            {/* Mark Rented */}
-            {!viewModal.isRented &&
-              (user.role === "admin" || user.id === viewModal.ownerId) && (
-                <button
-                  onClick={() => handleMarkRented(viewModal._id)}
-                  className="w-full mt-2 bg-green-600 text-white py-2 rounded-xl shadow hover:scale-105 transition-transform"
-                >
-                  Mark as Rented
-                </button>
-              )}
+            {/* Show rented badge */}
+{viewModal.isRented && (
+  <span className="bg-red-500 text-white px-3 py-1 rounded-full font-semibold absolute mt-2 ml-2">
+    Rented
+  </span>
+)}
+
+{/* Mark Rented button */}
+{!viewModal.isRented && (user.role === "admin" || user.id === viewModal.ownerId) && (
+  <button
+    onClick={() => handleMarkRented(viewModal._id)}
+    className="w-full mt-2 bg-green-600 text-white py-2 rounded-xl shadow hover:scale-105 transition-transform"
+  >
+    Mark as Rented
+  </button>
+)}
 
             {/* Delete */}
             {(user.role === "admin" || user.id === viewModal.ownerId) && (
