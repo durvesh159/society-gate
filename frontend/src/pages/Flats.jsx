@@ -767,12 +767,12 @@ export default function Flats() {
             >
               {/* Badges */}
               {f.featured && (
-                <span className="absolute top-3 left-3 bg-yellow-300 text-black text-xs px-2 py-0.5 rounded-full font-semibold">
+                <span className="absolute top-2 left-3 bg-yellow-300 text-black text-xs px-2 py-0.5 rounded-full font-semibold">
                   ★ Featured
                 </span>
               )}
               {f.isRented && (
-                <span className="absolute top-3 right-3 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full font-semibold">
+                <span className="absolute top-2 right-3 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full font-semibold">
                   Rented
                 </span>
               )}
