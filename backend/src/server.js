@@ -206,7 +206,8 @@ app.use('/api/attendance', require('./routes/attendance'));
 app.use("/api/news", require("./routes/news"));
 app.use("/api/flats", require("./routes/flats"));
 
-
+// app.use("/api/payments", require("./routes/paymentRoutes"));
+// app.use("/api/invoices", require("./routes/invoiceRoutes"))
 
 app.get('/', (req, res) => res.send('Society Gate API'));
 
