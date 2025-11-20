@@ -445,7 +445,7 @@ export default function Flats() {
                 </span>
               )}
               {f.isRented && (
-                <span className="bg-green-500 text-white px-2 py-1 rounded-full font-semibold absolute mt-2 ml-5">
+                <span className="bg-green-500 text-white px-2 py-1 rounded-full font-semibold items-end absolute mt-2 ml-5">
                     Rented
                 </span>
                 )}
