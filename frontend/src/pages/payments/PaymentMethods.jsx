@@ -1,11 +1,11 @@
 // src/pages/PaymentMethods.jsx
 import React, { useState } from "react";
-import DashboardLayout from "../components/DashboardLayout";
-import PaymentMethodCard from "../components/PaymentMethodCard";
-import FakeCardForm from "../components/FakeCardForm";
-import UPIForm from "../components/UPIForm";
-import QRPopup from "../components/QRPopup";
-import PaymentMethodIcon from "../components/PaymentMethodCard"; // re-use
+import DashboardLayout from "../../components/DashboardLayout";
+import PaymentMethodCard from "../../components/PaymentMethodCard";
+import FakeCardForm from "../../components/FakeCardForm";
+import UPIForm from "../../components/UPIForm";
+import QRPopup from "../../components/QRPopup";
+import PaymentMethodIcon from "../../components/PaymentMethodCard"; // re-use
 import { FiPhone, FiCreditCard, FiGrid } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 

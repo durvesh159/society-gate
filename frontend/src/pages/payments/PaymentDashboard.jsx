@@ -1,14 +1,14 @@
 // src/pages/PaymentDashboard.jsx
 import React, { useContext } from "react";
-import DashboardLayout from "../components/DashboardLayout";
-import { AuthContext } from "../contexts/AuthContext";
-import SummaryCards from "../components/SummaryCards";
-import PaymentTimeline from "../components/PaymentTimeline";
-import TransactionsTable from "../components/TransactionsTable";
-import ChartsSection from "../components/ChartsSection";
-import InvoiceCard from "../components/InvoiceCard";
-import { residentSample, adminSummary, invoices, transactions } from "../utils/fakeData";
-import { downloadInvoice } from "../utils/generateInvoice";
+import DashboardLayout from "../../components/DashboardLayout";
+import { AuthContext } from "../../contexts/AuthContext";
+import SummaryCards from "../../components/SummaryCards";
+import PaymentTimeline from "../../components/PaymentTimeline";
+import TransactionsTable from "../../components/TransactionsTable";
+import ChartsSection from "../../components/ChartsSection";
+import InvoiceCard from "../../components/InvoiceCard";
+import { residentSample, adminSummary, invoices, transactions } from "../../../../backend/src/utils/fakeData";
+import { downloadInvoice } from "../../../../backend/src/utils/generateInvoice";
 
 export default function PaymentDashboard() {
   const { user } = useContext(AuthContext);
