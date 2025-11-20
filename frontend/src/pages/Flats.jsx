@@ -400,16 +400,17 @@ export default function Flats() {
 
   // Mark as rented
   const handleMarkRented = async (id) => {
-    try {
-      await API.patch(`/flats/rented/${id}`);
-      alert("Flat marked as rented!");
-      loadFlats();
-      setViewModal(null);
-    } catch (err) {
-      console.log(err);
-      alert(err.response?.data?.msg || "Unable to mark as rented");
-    }
-  };
+  try {
+    await API.patch(`/flats/rented/${id}`);
+    alert("Flat marked as rented!");
+    loadFlats();
+    setViewModal(null);
+  } catch (err) {
+    console.log(err);
+    alert(err.response?.data?.msg || "Unable to mark as rented");
+  }
+};
+
 
   return (
     <DashboardLayout role={user.role}>

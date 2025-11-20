@@ -8,7 +8,7 @@ const auth = require("../middleware/auth");
 const { permit } = require("../middleware/roles");
 
 // Only Admin + Resident can list flats
-router.post("/add", auth, permit("admin", "resident"), addFlat);
+//router.post("/add", auth, permit("admin", "resident"), addFlat);
 
 // View flats - only admin & residents
 router.get("/", auth, permit("admin", "resident"), getAllFlats);
@@ -20,6 +20,14 @@ router.patch("/feature/:id", auth, permit("admin"), markFeatured);
 router.patch("/rented/:id", auth, markAsRented);
 
 router.delete("/:id", auth, deleteFlat);
+
+//
+const multer = require("multer");
+const storage = multer.memoryStorage(); // store files in memory
+const upload = multer({ storage });
+
+router.post("/add", auth, permit("admin", "resident"), upload.array("images"), addFlat);
+
 
 
 module.exports = router;
