@@ -445,10 +445,10 @@ export default function Flats() {
                 </span>
               )}
               {f.isRented && (
-  <span className="bg-red-500 text-white px-2 py-1 rounded-full font-semibold absolute mt-2 ml-2">
-    Rented
-  </span>
-)}
+                <span className="bg-green-500 text-white px-2 py-1 rounded-full font-semibold absolute mt-2 ml-5">
+                    Rented
+                </span>
+                )}
 
 
               <img
@@ -470,76 +470,75 @@ export default function Flats() {
       </div>
 
       {/* VIEW MODAL */}
-      {viewModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="backdrop-blur-xl bg-white/90 border border-purple-200 rounded-3xl w-full max-w-xl p-6 shadow-2xl space-y-4 overflow-y-auto max-h-[90vh]">
-            <h2 className="text-2xl font-bold text-purple-900">{viewModal.bhk} BHK Apartment</h2>
+      {/* VIEW MODAL */}
+{viewModal && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="backdrop-blur-xl bg-white/90 border border-purple-200 rounded-3xl w-full max-w-xl p-6 shadow-2xl space-y-4 overflow-y-auto max-h-[90vh]">
+      <h2 className="text-2xl font-bold text-purple-900">{viewModal.bhk} BHK Apartment</h2>
 
-            <img
-              //src={viewModal.images[0]}
-              // eslint-disable-next-line no-undef
-              src={`data:image/jpeg;base64,${f.images[0]}`}
-              className="w-full rounded-2xl shadow"
-            />
+      {/* Main image */}
+      <img
+        src={`data:image/jpeg;base64,${viewModal.images[0]}`}
+        className="w-full rounded-2xl shadow"
+      />
 
-            <div className="space-y-2 text-gray-800">
-              <p><strong>Rent:</strong> ₹{viewModal.price}</p>
-              <p><strong>Area:</strong> {viewModal.area} sqft</p>
-              <p><strong>Furnished:</strong> {viewModal.furnished}</p>
-              <p><strong>Description:</strong> {viewModal.description}</p>
-              <p className="flex items-center gap-2">
-                <FiMail /> {viewModal.ownerName}
-              </p>
-            </div>
+      <div className="space-y-2 text-gray-800">
+        <p><strong>Rent:</strong> ₹{viewModal.price}</p>
+        <p><strong>Area:</strong> {viewModal.area} sqft</p>
+        <p><strong>Furnished:</strong> {viewModal.furnished}</p>
+        <p><strong>Description:</strong> {viewModal.description}</p>
+        <p className="flex items-center gap-2">
+          <FiMail /> {viewModal.ownerName}
+        </p>
+      </div>
 
-            {/* Admin - Mark Featured */}
-            {user.role === "admin" && !viewModal.featured && (
-              <button
-                onClick={() =>
-                  API.patch(`/flats/feature/${viewModal._id}`).then(loadFlats)
-                }
-                className="w-full mt-2 bg-yellow-500 text-black py-2 rounded-xl shadow hover:scale-105 transition-transform"
-              >
-                <FiStar className="inline-block mr-1" /> Mark Featured
-              </button>
-            )}
-
-            {/* Show rented badge */}
-{viewModal.isRented && (
-  <span className="bg-red-500 text-white px-3 py-1 rounded-full font-semibold absolute mt-2 ml-2">
-    Rented
-  </span>
-)}
-
-{/* Mark Rented button */}
-{!viewModal.isRented && (user.role === "admin" || user.id === viewModal.ownerId) && (
-  <button
-    onClick={() => handleMarkRented(viewModal._id)}
-    className="w-full mt-2 bg-green-600 text-white py-2 rounded-xl shadow hover:scale-105 transition-transform"
-  >
-    Mark as Rented
-  </button>
-)}
-
-            {/* Delete */}
-            {(user.role === "admin" || user.id === viewModal.ownerId) && (
-              <button
-                onClick={() => deleteFlat(viewModal._id)}
-                className="w-full mt-2 bg-red-600 text-white py-2 rounded-xl flex justify-center gap-2 shadow hover:scale-105 transition-transform"
-              >
-                <FiTrash2 /> Delete
-              </button>
-            )}
-
-            <button
-              onClick={() => setViewModal(null)}
-              className="w-full mt-2 bg-gray-400 text-white py-2 rounded-xl shadow hover:bg-gray-500 transition-colors"
-            >
-              Close
-            </button>
-          </div>
-        </div>
+      {/* Rented badge */}
+      {viewModal.isRented && (
+        <span className="bg-red-500 text-white px-3 py-1 rounded-full font-semibold absolute mt-2 ml-2">
+          Rented
+        </span>
       )}
+
+      {/* Admin - Mark Featured */}
+      {user.role === "admin" && !viewModal.featured && (
+        <button
+          onClick={() => API.patch(`/flats/feature/${viewModal._id}`).then(loadFlats)}
+          className="w-full mt-2 bg-yellow-500 text-black py-2 rounded-xl shadow hover:scale-105 transition-transform"
+        >
+          <FiStar className="inline-block mr-1" /> Mark Featured
+        </button>
+      )}
+
+      {/* Mark Rented button */}
+      {!viewModal.isRented && (user.role === "admin" || user.id === viewModal.ownerId) && (
+        <button
+          onClick={() => handleMarkRented(viewModal._id)}
+          className="w-full mt-2 bg-green-600 text-white py-2 rounded-xl shadow hover:scale-105 transition-transform"
+        >
+          Mark as Rented
+        </button>
+      )}
+
+      {/* Delete button */}
+      {(user.role === "admin" || user.id === viewModal.ownerId) && (
+        <button
+          onClick={() => deleteFlat(viewModal._id)}
+          className="w-full mt-2 bg-red-600 text-white py-2 rounded-xl flex justify-center gap-2 shadow hover:scale-105 transition-transform"
+        >
+          <FiTrash2 /> Delete
+        </button>
+      )}
+
+      <button
+        onClick={() => setViewModal(null)}
+        className="w-full mt-2 bg-gray-400 text-white py-2 rounded-xl shadow hover:bg-gray-500 transition-colors"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
 
       {/* ADD FLAT MODAL */}
       {addModal && (
