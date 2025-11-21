@@ -363,7 +363,7 @@ export default function GuardVisitors() {
               <button
                 type="button"
                 onClick={startCamera}
-                className="col-span-1 md:col-span-2 flex items-center justify-center gap-2 px-4 py-3 bg-purple-700 text-white rounded-xl"
+                className="col-span-1 md:col-span-1 flex items-center justify-center gap-2 px-4 py-3 bg-purple-700 text-white rounded-xl"
               >
                 <FiCamera /> Capture Document Photo
               </button>
