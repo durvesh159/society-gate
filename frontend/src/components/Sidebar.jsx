@@ -132,7 +132,7 @@ const Sidebar = ({ role, onLogout, isOpen, toggleSidebar }) => {
   return (
     <div
       className={`
-        fixed top-0 left-0 h-full z-40
+        fixed top-0 left-0 h-full z-40 flex flex-col
         w-64 bg-gradient-to-b from-purple-900 via-purple-600 to-purple-400 text-white shadow-xl
         transform transition-transform duration-300
         ${isOpen ? "translate-x-0" : "-translate-x-64"}
@@ -143,7 +143,7 @@ const Sidebar = ({ role, onLogout, isOpen, toggleSidebar }) => {
       <div className="p-5 text-2xl font-bold border-b border-purple-800 flex justify-between items-center">
         SocietyGate
 
-        {/* Close button only on mobile */}
+        {/* Close for mobile */}
         <button
           onClick={toggleSidebar}
           className="lg:hidden text-white text-2xl"
@@ -153,7 +153,7 @@ const Sidebar = ({ role, onLogout, isOpen, toggleSidebar }) => {
       </div>
 
       {/* Menu */}
-      <ul className="flex-1 p-4 space-y-2">
+      <ul className="flex-1 p-4 space-y-2 overflow-y-auto">
         {menuItems[role]?.map((item) => (
           <li key={item.name}>
             <Link
@@ -172,15 +172,18 @@ const Sidebar = ({ role, onLogout, isOpen, toggleSidebar }) => {
         ))}
       </ul>
 
-      {/* Logout */}
-      <button
-        onClick={onLogout}
-        className="m-4 p-2 bg-red-600 hover:bg-red-700 rounded-lg flex items-center justify-center gap-2 shadow-md transition-all"
-      >
-        <FiLogOut /> Logout
-      </button>
+      {/* Logout button fixed at bottom, full width */}
+      <div className="p-4">
+        <button
+          onClick={onLogout}
+          className="w-full bg-red-600 hover:bg-red-700 py-2 rounded-lg flex items-center justify-center gap-2 shadow-md transition-all"
+        >
+          <FiLogOut /> Logout
+        </button>
+      </div>
     </div>
   );
 };
 
 export default Sidebar;
+
