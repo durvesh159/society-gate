@@ -175,7 +175,7 @@ const Sidebar = ({ role, onLogout, isOpen, toggleSidebar }) => {
       {/* Logout */}
       <button
         onClick={onLogout}
-        className="m-4 p-2 w-4 bg-red-600 hover:bg-red-700 rounded-lg flex items-center justify-center gap-2 shadow-md transition-all"
+        className="m-4 p-2 bg-red-600 hover:bg-red-700 rounded-lg flex items-center justify-center gap-2 shadow-md transition-all"
       >
         <FiLogOut /> Logout
       </button>
