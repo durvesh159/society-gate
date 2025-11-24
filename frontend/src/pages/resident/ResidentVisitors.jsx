@@ -250,7 +250,7 @@ export default function ResidentVisitors() {
                       </td>
                       <td className="p-2 sm:p-3 text-gray-600">{v.passcode || "--"}</td>
 
-                      <td className="p-2 sm:p-3 flex justify-center">
+                      <td className="p-2  flex justify-center">
                         <button
                           className="text-purple-700 hover:text-purple-900 transition"
                           onClick={() => {
@@ -258,9 +258,10 @@ export default function ResidentVisitors() {
                             setShowViewModal(true);
                           }}
                         >
-                          <FiInfo size={8} className="sm:size-20" />
+                          <FiInfo size={18}  />
                         </button>
                       </td>
+                      
                     </tr>
                   ))}
                 </tbody>
