@@ -258,7 +258,7 @@ export default function ResidentVisitors() {
                             setShowViewModal(true);
                           }}
                         >
-                          <FiInfo size={18} className="sm:size-20" />
+                          <FiInfo size={8} className="sm:size-20" />
                         </button>
                       </td>
                     </tr>
