@@ -1,9 +1,8 @@
-// // src/components/Sidebar.jsx
 // import React from "react";
 // import { Link, useLocation } from "react-router-dom";
 // import { 
 //   FiHome, FiUsers, FiShield, FiTool, 
-//   FiLogOut, FiEye, FiClock
+//   FiLogOut, FiEye, FiClock, FiCreditCard
 // } from "react-icons/fi";
 
 // const Sidebar = ({ role, onLogout }) => {
@@ -17,23 +16,30 @@
 //       { name: "Staff", path: "/admin/staff", icon: <FiTool /> },
 //       { name: "Visitors", path: "/admin/visitors", icon: <FiEye /> },
 //       { name: "Guard Attendance", path: "/admin/attendance", icon: <FiClock /> },
-//       { name: "Rent Flats", path: "/rent", icon: <FiHome /> },
-// //{ name: "Add Flat", path: "/rent/add", icon: <FiHome /> },
 
+//       // PAYMENT MODULE
+//       { name: "Payments", path: "/payments/admin", icon: <FiCreditCard /> },
+
+//       { name: "Rent Flats", path: "/rent", icon: <FiHome /> },
 //     ],
+
 //     resident: [
 //       { name: "Dashboard", path: "/resident", icon: <FiHome /> },
 //       { name: "Visitors", path: "/resident/visitors", icon: <FiUsers /> },
-//       { name: "Rent Flats", path: "/rent", icon: <FiHome /> },
-// //{ name: "Add Flat", path: "/rent/add", icon: <FiHome /> },
 
+//       // PAYMENT MODULE
+//       { name: "My Payments", path: "/payments/resident", icon: <FiCreditCard /> },
+
+//       { name: "Rent Flats", path: "/rent", icon: <FiHome /> },
 //     ],
+
 //     guard: [
 //       { name: "Dashboard", path: "/guard", icon: <FiHome /> },
 //       { name: "Visitors", path: "/guard/visitors", icon: <FiUsers /> },
 //       { name: "My Attendance", path: "/guard/attendance", icon: <FiClock /> },
 //       { name: "Staff Attendance", path: "/guard/staff-attendance", icon: <FiUsers /> },
 //     ],
+
 //     staff: [
 //       { name: "Dashboard", path: "/staff", icon: <FiHome /> },
 //       { name: "Attendance", path: "/staff/attendance", icon: <FiClock /> },
@@ -48,7 +54,7 @@
 //         SocietyGate
 //       </div>
 
-//       {/* Menu Items */}
+//       {/* Menu */}
 //       <ul className="flex-1 p-4 space-y-2">
 //         {menuItems[role]?.map((item) => (
 //           <li key={item.name}>
@@ -65,8 +71,6 @@
 //             </Link>
 //           </li>
 //         ))}
-
-        
 //       </ul>
 
 //       {/* Logout */}
@@ -83,16 +87,21 @@
 // export default Sidebar;
 
 
-
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { 
-  FiHome, FiUsers, FiShield, FiTool, 
-  FiLogOut, FiEye, FiClock, FiCreditCard
+import {
+  FiHome, FiUsers, FiShield, FiTool,
+  FiLogOut, FiEye, FiClock, FiCreditCard,
+  FiMenu, FiX
 } from "react-icons/fi";
 
 const Sidebar = ({ role, onLogout }) => {
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false); // for mobile sidebar toggle
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
 
   const menuItems = {
     admin: [
@@ -102,20 +111,14 @@ const Sidebar = ({ role, onLogout }) => {
       { name: "Staff", path: "/admin/staff", icon: <FiTool /> },
       { name: "Visitors", path: "/admin/visitors", icon: <FiEye /> },
       { name: "Guard Attendance", path: "/admin/attendance", icon: <FiClock /> },
-
-      // PAYMENT MODULE
       { name: "Payments", path: "/payments/admin", icon: <FiCreditCard /> },
-
       { name: "Rent Flats", path: "/rent", icon: <FiHome /> },
     ],
 
     resident: [
       { name: "Dashboard", path: "/resident", icon: <FiHome /> },
       { name: "Visitors", path: "/resident/visitors", icon: <FiUsers /> },
-
-      // PAYMENT MODULE
       { name: "My Payments", path: "/payments/resident", icon: <FiCreditCard /> },
-
       { name: "Rent Flats", path: "/rent", icon: <FiHome /> },
     ],
 
@@ -133,40 +136,60 @@ const Sidebar = ({ role, onLogout }) => {
   };
 
   return (
-    <div className="w-64 h-screen bg-gradient-to-b from-purple-900 via-purple-600 to-purple-400 text-white flex flex-col shadow-xl">
-
-      {/* Logo */}
-      <div className="p-5 text-2xl font-bold border-b border-purple-800">
-        SocietyGate
-      </div>
-
-      {/* Menu */}
-      <ul className="flex-1 p-4 space-y-2">
-        {menuItems[role]?.map((item) => (
-          <li key={item.name}>
-            <Link
-              to={item.path}
-              className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all ${
-                location.pathname === item.path
-                  ? "bg-purple-700 text-white shadow-lg"
-                  : "text-gray-200 hover:bg-purple-700 hover:text-white"
-              }`}
-            >
-              {item.icon}
-              <span>{item.name}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-      {/* Logout */}
+    <>
+      {/* 📌 Hamburger Button : Visible only on Small (s) & Medium (m) screens */}
       <button
-        onClick={onLogout}
-        className="m-4 p-2 bg-red-600 hover:bg-red-700 rounded-lg flex items-center justify-center gap-2 shadow-md transition-all"
+        onClick={toggleSidebar}
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-purple-700 text-white rounded-md shadow-md"
       >
-        <FiLogOut /> Logout
+        {isOpen ? <FiX size={22} /> : <FiMenu size={22} />}
       </button>
-    </div>
+
+      {/* 📌 Sidebar */}
+      <div
+        className={`
+          fixed top-0 left-0 h-full w-64 bg-gradient-to-b 
+          from-purple-900 via-purple-600 to-purple-400 text-white 
+          shadow-xl flex flex-col transform transition-transform duration-300 z-40
+
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}   /* Mobile behavior */
+          lg:translate-x-0                                     /* Desktop always visible */
+        `}
+      >
+        {/* Logo */}
+        <div className="p-5 text-2xl font-bold border-b border-purple-800">
+          SocietyGate
+        </div>
+
+        {/* Menu */}
+        <ul className="flex-1 p-4 space-y-2">
+          {menuItems[role]?.map((item) => (
+            <li key={item.name}>
+              <Link
+                to={item.path}
+                onClick={() => setIsOpen(false)} // Auto close sidebar on click (mobile)
+                className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all ${
+                  location.pathname === item.path
+                    ? "bg-purple-700 text-white shadow-lg"
+                    : "text-gray-200 hover:bg-purple-700 hover:text-white"
+                }`}
+              >
+                {item.icon}
+                <span>{item.name}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* Logout */}
+        <button
+          onClick={onLogout}
+          className="m-4 p-2 bg-red-600 hover:bg-red-700 rounded-lg flex items-center justify-center gap-2 shadow-md transition-all"
+        >
+          <FiLogOut /> Logout
+        </button>
+      </div>
+    </>
   );
 };
 
