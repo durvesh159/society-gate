@@ -513,8 +513,8 @@ export default function StaffPage() {
       <div className="min-h-screen p-4 s:p-6 m:p-8 bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
 
         {/* Header */}
-        <div className="flex flex-col s:flex-row justify-between items-start s:items-center mb-8 gap-4">
-          <h1 className="text-2xl s:text-3xl font-bold text-purple-900 tracking-wide">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-10">
+          <h1 className="text-2xl md:text-3xl font-bold text-purple-900 tracking-wide">
             Staff Management
           </h1>
 
