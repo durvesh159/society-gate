@@ -520,7 +520,7 @@ export default function StaffPage() {
 
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-xl shadow-md transition-all w-full s:w-auto justify-center"
+            className="flex items-center gap-2 bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-xl shadow-md transition-all w-full md:w-auto justify-center"
           >
             <FiUserPlus /> Add Staff
           </button>
