@@ -117,7 +117,8 @@ import React, { useState, useEffect, useContext } from "react";
 import API from "../../api/api";
 import { AuthContext } from "../../contexts/AuthContext";
 import DashboardLayout from "../../components/DashboardLayout";
-import { FiUser, FiClock } from "react-icons/fi";
+import { FiUser, FiClock, FiHome, FiPhone, FiMail, FiUserPlus } from "react-icons/fi";
+
 
 export default function StaffDashboard() {
   const { user, logout } = useContext(AuthContext);
@@ -171,18 +172,22 @@ export default function StaffDashboard() {
             </div>
 
             <div className="flex items-center gap-2">
+              <FiUserPlus className="text-purple-700" />
               <p><b>Role:</b> {staffInfo.role}</p>
             </div>
 
             <div className="flex items-center gap-2">
+              <FiMail className="text-purple-700" />
               <p><b>Email:</b> {staffInfo.email}</p>
             </div>
 
             <div className="flex items-center gap-2">
+              <FiPhone className="text-purple-700" />
               <p><b>Mobile:</b> {staffInfo.mobile}</p>
             </div>
 
             <div className="flex items-center gap-2 sm:col-span-2">
+              <FiHome className="text-purple-700" />
               <p><b>Address:</b> {staffInfo.address || "N/A"}</p>
             </div>
           </div>
