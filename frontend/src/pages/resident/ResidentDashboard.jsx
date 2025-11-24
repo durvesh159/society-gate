@@ -289,11 +289,11 @@ export default function ResidentDashboard() {
       <div className="min-h-screen p-4 md:p-8 bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
 
         {/* HEADER */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8">
+        {/* <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8">
           <h1 className="text-2xl md:text-3xl font-extrabold text-purple-900 tracking-wide drop-shadow-sm">
             Resident Dashboard
           </h1>
-        </div>
+        </div> */}
 
         {/* ========================== */}
         {/* PRE-APPROVE FORM CARD */}

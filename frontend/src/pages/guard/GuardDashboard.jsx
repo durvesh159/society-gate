@@ -166,9 +166,9 @@ export default function GuardDashboard() {
       <div className="min-h-screen p-4 sm:p-6 md:p-8 bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
 
         {/* TITLE */}
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-6 sm:mb-8 text-purple-900 tracking-wide drop-shadow-sm">
+        {/* <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-6 sm:mb-8 text-purple-900 tracking-wide drop-shadow-sm">
           Guard Dashboard
-        </h1>
+        </h1> */}
 
         {/* ==========================
             GUARD PROFILE
