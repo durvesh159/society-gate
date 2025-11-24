@@ -253,7 +253,7 @@ export default function AdminDashboard() {
 
   return (
     <DashboardLayout role="admin" onLogout={logout}>
-      <div className="p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
+      <div className="sm:p-6 lg:p-8 min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
 
         {/* TITLE */}
         {/* <h1 className="text-4xl font-extrabold text-purple-900 mb-10 tracking-wide drop-shadow-sm">
