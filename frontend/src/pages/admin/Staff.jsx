@@ -510,7 +510,7 @@ export default function StaffPage() {
 
   return (
     <DashboardLayout role="admin" onLogout={logout}>
-      <div className="min-h-screen p-4 s:p-6 m:p-8 bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
+      <div className="min-h-screen p-4 md:p-8 bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
 
         {/* Header */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-10">
