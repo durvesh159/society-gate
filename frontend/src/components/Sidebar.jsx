@@ -90,18 +90,21 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
-  FiHome, FiUsers, FiShield, FiTool,
-  FiLogOut, FiEye, FiClock, FiCreditCard,
-  FiMenu, FiX
+  FiHome,
+  FiUsers,
+  FiShield,
+  FiTool,
+  FiLogOut,
+  FiEye,
+  FiClock,
+  FiCreditCard,
+  FiMenu,
+  FiX,
 } from "react-icons/fi";
 
 const Sidebar = ({ role, onLogout }) => {
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false); // for mobile sidebar toggle
-
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+  const [isOpen, setIsOpen] = useState(false); // Mobile toggle
 
   const menuItems = {
     admin: [
@@ -111,14 +114,20 @@ const Sidebar = ({ role, onLogout }) => {
       { name: "Staff", path: "/admin/staff", icon: <FiTool /> },
       { name: "Visitors", path: "/admin/visitors", icon: <FiEye /> },
       { name: "Guard Attendance", path: "/admin/attendance", icon: <FiClock /> },
+
+      // PAYMENT MODULE
       { name: "Payments", path: "/payments/admin", icon: <FiCreditCard /> },
+
       { name: "Rent Flats", path: "/rent", icon: <FiHome /> },
     ],
 
     resident: [
       { name: "Dashboard", path: "/resident", icon: <FiHome /> },
       { name: "Visitors", path: "/resident/visitors", icon: <FiUsers /> },
+
+      // PAYMENT MODULE
       { name: "My Payments", path: "/payments/resident", icon: <FiCreditCard /> },
+
       { name: "Rent Flats", path: "/rent", icon: <FiHome /> },
     ],
 
@@ -137,23 +146,29 @@ const Sidebar = ({ role, onLogout }) => {
 
   return (
     <>
-      {/* 📌 Hamburger Button : Visible only on Small (s) & Medium (m) screens */}
+      {/* ==================== MOBILE HAMBURGER BUTTON (s & m screen only) ==================== */}
       <button
-        onClick={toggleSidebar}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-purple-700 text-white rounded-md shadow-md"
+        className="fixed top-4 left-4 z-50 bg-purple-700 text-white p-2 rounded-lg s:block m:block lg:hidden xl:hidden"
+        onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+        {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
       </button>
 
-      {/* 📌 Sidebar */}
+      {/* ==================== SIDEBAR ==================== */}
       <div
         className={`
-          fixed top-0 left-0 h-full w-64 bg-gradient-to-b 
-          from-purple-900 via-purple-600 to-purple-400 text-white 
-          shadow-xl flex flex-col transform transition-transform duration-300 z-40
+          fixed top-0 left-0 h-screen w-64 bg-gradient-to-b from-purple-900 via-purple-600 to-purple-400 
+          text-white flex flex-col shadow-xl transition-transform duration-300
+          
+          /* Hidden by default on s & m */
+          s:transform s:-translate-x-full
+          m:transform m:-translate-x-full
 
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}   /* Mobile behavior */
-          lg:translate-x-0                                     /* Desktop always visible */
+          /* Visible when open */
+          ${isOpen ? "translate-x-0" : ""}
+
+          /* Always visible on lg & xl */
+          lg:translate-x-0 xl:translate-x-0
         `}
       >
         {/* Logo */}
@@ -167,7 +182,7 @@ const Sidebar = ({ role, onLogout }) => {
             <li key={item.name}>
               <Link
                 to={item.path}
-                onClick={() => setIsOpen(false)} // Auto close sidebar on click (mobile)
+                onClick={() => setIsOpen(false)} // Auto close on mobile
                 className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all ${
                   location.pathname === item.path
                     ? "bg-purple-700 text-white shadow-lg"
@@ -183,7 +198,10 @@ const Sidebar = ({ role, onLogout }) => {
 
         {/* Logout */}
         <button
-          onClick={onLogout}
+          onClick={() => {
+            setIsOpen(false);
+            onLogout();
+          }}
           className="m-4 p-2 bg-red-600 hover:bg-red-700 rounded-lg flex items-center justify-center gap-2 shadow-md transition-all"
         >
           <FiLogOut /> Logout
