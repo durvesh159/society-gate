@@ -88,7 +88,10 @@ export default function ForgotPassword() {
   const submit = async (e) => {
     e.preventDefault();
     try {
-      const res = await API.post("/password/forgot", { email });
+      const res = await API.post("/password/forgot", { email }, {
+  headers: { Authorization: "" }
+});
+
       setMsg(res.data.msg || "If that email exists, a reset link has been sent.");
     } catch (err) {
       setMsg(err.response?.data?.msg || "Error sending reset email");
