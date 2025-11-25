@@ -34,15 +34,5 @@ export const getFlats = () => API.get("/flats");
 export const markFeatured = (id) => API.put(`/flats/featured/${id}`);
 export const markAsRented = (id) => API.put(`/flats/rented/${id}`);
 
-const publicRoutes = ["/password/forgot", "/password/reset"];
-
-API.interceptors.request.use((config) => {
-  if (publicRoutes.includes(config.url)) {
-    delete config.headers.Authorization;
-  }
-  return config;
-});
-
-
 
 export default API;

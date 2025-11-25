@@ -223,5 +223,11 @@ io.on('connection', (socket) => {
   });
 });
 
+app.use((req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
+  next();
+});
+
+
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log('Server running on', PORT));
