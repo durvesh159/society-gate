@@ -37,7 +37,7 @@ const preApproveVisitor = async (req, res) => {
     // Send SMS + Email (passcode to both)
 const smsMsg = `OTP for your mobile verification is ${passcode}. It will be valid for 1 minutes.`;
 
-sendSMS(mobile, smsMsg); // send SMS
+await sendSMS(mobile, smsMsg); // send SMS
 
 try {
   await sendMail({

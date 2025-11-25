@@ -7,7 +7,7 @@
 
 // const addVisitor = async (req, res) => {
 //   try {
-//     const { name, mobile, purpose, flatVisited, preapproved } = req.body;
+//     const { name, mobile, purpose, flatVisited, preapproved, documentImage  } = req.body;
 //     const guardId = req.user.id;
 //     const io = req.app.get("io");
 
@@ -34,6 +34,7 @@
 //       passcode,
 //       guard: guardId,
 //       status: preapproved ? "preapproved" : "pending",
+//       documentImage, // store base64 temporarily
 //       resident: resident?._id || undefined
 //     };
 
@@ -89,6 +90,7 @@
 //     if (decision === 'allow') {
 //       visitor.status = 'allowed';
 //       visitor.entryTime = new Date();
+//       visitor.documentImage = null;
 //     } else {
 //       visitor.status = 'rejected';
 //     }
@@ -179,6 +181,7 @@
 // };
 
 
+
 // backend/controllers/guardController.js
 const Visitor = require('../models/Visitor');
 const Resident = require('../models/Resident');
@@ -230,7 +233,7 @@ const addVisitor = async (req, res) => {
       if (resident.mobile) {
         //const smsMsg = `A new visitor ${name} wants to visit your flat ${flatVisited}. Please login to Society App and Allow/Reject.`;
         const smsMsg = `OTP for your mobile verification is ${name}${flatVisited}. It will be valid for 1 minutes.`;
-        sendSMS(resident.mobile, smsMsg);
+        await sendSMS(resident.mobile, smsMsg);
       }
 
       // ============= EMAIL =============
