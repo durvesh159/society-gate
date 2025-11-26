@@ -152,8 +152,8 @@ import { FiUsers, FiInfo, FiSearch, FiX, FiDownload } from "react-icons/fi";
 import API from "../../api/api";
 import { AuthContext } from "../../contexts/AuthContext";
 import DashboardLayout from "../../components/DashboardLayout";
-import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+
 
 export default function VisitorsPage() {
   const { logout } = useContext(AuthContext);
@@ -228,58 +228,65 @@ export default function VisitorsPage() {
     if (type === "to") setDateTo("");
   };
 
-  // ------------------------------------------------------
-  // FIX: REPLACE ALL OKLCH COLORS BEFORE PDF CAPTURE
-  // ------------------------------------------------------
-  const replaceUnsafeColors = (element) => {
-    const all = element.querySelectorAll("*");
-    const backups = [];
-
-    all.forEach((el) => {
-      const styles = window.getComputedStyle(el);
-      const bg = styles.backgroundColor;
-
-      if (bg.includes("oklch")) {
-        backups.push({ el, original: el.style.backgroundColor });
-        el.style.backgroundColor = "#ffffff"; // safe pdf color
-      }
-    });
-
-    return backups;
-  };
-
-  const restoreColors = (backups) => {
-    backups.forEach(({ el, original }) => {
-      el.style.backgroundColor = original;
-    });
-  };
+  
 
   // -------------------------------------------------------
   // EXPORT PDF (100% working)
   // -------------------------------------------------------
-  const exportPDF = async () => {
-    const table = tableRef.current;
+  const exportPDF = () => {
+  if (!filtered || filtered.length === 0) return;
 
-    const backups = replaceUnsafeColors(table);
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const margin = 10;
+  let yPos = 20;
 
-    const canvas = await html2canvas(table, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#ffffff",
-      logging: false,
-      scrollY: -window.scrollY,
+  pdf.setFontSize(18);
+  pdf.text("Visitor Logs", pageWidth / 2, 10, { align: "center" });
+
+  pdf.setFontSize(12);
+  pdf.setTextColor(50);
+
+  const headers = ["Name", "Flat", "Purpose", "Entry", "Exit", "Guard"];
+  const colWidths = [25, 20, 30, 45, 45, 25];
+
+  let xPos = margin;
+  headers.forEach((header, i) => {
+    pdf.text(header, xPos, yPos);
+    xPos += colWidths[i];
+  });
+
+  yPos += 8;
+  pdf.setDrawColor(100);
+  pdf.line(margin, yPos - 5, pageWidth - margin, yPos - 5);
+
+  filtered.forEach((v) => {
+    if (yPos > 270) {
+      pdf.addPage();
+      yPos = 20;
+    }
+
+    const row = [
+      v.name || "--",
+      v.flatVisited || "--",
+      v.purpose || "--",
+      v.entryTime ? new Date(v.entryTime).toLocaleString() : "--",
+      v.exitTime ? new Date(v.exitTime).toLocaleString() : "--",
+      v.guard?.name || "--"
+    ];
+
+    let xPos = margin;
+    row.forEach((text, i) => {
+      pdf.text(String(text), xPos, yPos);
+      xPos += colWidths[i];
     });
 
-    restoreColors(backups);
+    yPos += 8;
+  });
 
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const width = pdf.internal.pageSize.getWidth();
-    const height = (canvas.height * width) / canvas.width;
+  pdf.save("visitor-logs.pdf");
+};
 
-    pdf.addImage(imgData, "PNG", 0, 0, width, height);
-    pdf.save("visitor-logs.pdf");
-  };
 
   return (
     <DashboardLayout role="admin" onLogout={logout}>
