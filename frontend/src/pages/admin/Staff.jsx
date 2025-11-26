@@ -468,50 +468,61 @@ export default function StaffPage() {
 
   const uniqueRoles = [...new Set(staffList.map((s) => s.role).filter(Boolean))];
 
-  // 🧾 Export PDF
-  const exportPDF = () => {
-    if (!filtered.length) return;
+  // Export PDF — Same Format as Guards
+const exportPDF = () => {
+  if (!filtered.length) return;
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const margin = 10;
+  let yPos = 20;
 
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const margin = 10;
-    let yPos = 20;
+  pdf.setFontSize(18);
+  pdf.text("Staff Report", pageWidth / 2, 10, { align: "center" });
 
-    pdf.setFontSize(18);
-    pdf.text("Staff List", pageWidth / 2, yPos, { align: "center" });
-    yPos += 10;
+  pdf.setFontSize(12);
+  pdf.setTextColor(50);
 
-    pdf.setFontSize(11);
+  const headers = ["Name", "Role", "Email", "Mobile", "Status"];
+  const widths = [40, 30, 60, 25, 25];
 
-    filtered.forEach((s, index) => {
-      const status = s.isPresent ? "Inside" : "Outside";
-      const address = `${s.address || "—"}`;
+  let xPos = margin;
+  headers.forEach((h, i) => {
+    pdf.text(h, xPos, yPos);
+    xPos += widths[i];
+  });
 
-      pdf.text(
-        [
-          `Name: ${s.name}`,
-          `Role: ${s.role || "—"}`,
-          `Email: ${s.email}`,
-          `Mobile: ${s.mobile}`,
-          `Address: ${address}`,
-          `Status: ${status}`,
-          `-----------------------------`,
-        ],
-        margin,
-        yPos
-      );
+  yPos += 8;
 
-      const lineCount = address.length > 60 ? 6 : 5;
-      yPos += lineCount * 7;
+  filtered.forEach((s) => {
+    if (yPos > 270) {
+      pdf.addPage();
+      yPos = 20;
+    }
 
-      if (yPos > 270) {
-        pdf.addPage();
-        yPos = 20;
-      }
+    let row = [
+      s.name || "--",
+      s.role || "--",
+      s.email || "--",
+      s.mobile || "--",
+      s.isPresent ? "Inside" : "Outside"
+    ];
+
+    let x = margin;
+    let rowHeight = 0;
+
+    row.forEach((text, i) => {
+      const lines = pdf.splitTextToSize(String(text), widths[i]);
+      pdf.text(lines, x, yPos);
+      rowHeight = Math.max(rowHeight, lines.length * 7);
+      x += widths[i];
     });
 
-    pdf.save("staff-list.pdf");
-  };
+    yPos += rowHeight + 2;
+  });
+
+  pdf.save("staff.pdf");
+};
+
 
   const addStaff = async (e) => {
     e.preventDefault();
@@ -565,7 +576,8 @@ export default function StaffPage() {
           <h1 className="text-2xl md:text-3xl font-bold text-purple-900 tracking-wide">
             Staff Management
           </h1>
-          <button
+          <div className="flex gap-3">
+            <button
             onClick={() => setShowAddModal(true)}
             className="flex items-center gap-2 bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-xl shadow-md transition-all w-full md:w-auto justify-center"
           >
@@ -578,6 +590,7 @@ export default function StaffPage() {
               >
                 <FiDownload /> Export PDF
               </button>
+          </div>
         </div>
 
         {/* Card */}
@@ -643,7 +656,7 @@ export default function StaffPage() {
 
         {/* Table */}
           <div
-                    className="backdrop-blur-xl bg-white/60 border border-purple-200 rounded-2xl shadow-xl p-4 sm:p-6"
+                    className="backdrop-blur-xl bg-white/60 border border-purple-200 rounded-2xl shadow-xl mb-6 p-4 sm:p-6"
                     
                   >
                     <div className="flex items-center gap-2 mb-4">
