@@ -594,7 +594,7 @@ const exportPDF = () => {
         </div>
 
         {/* Card */}
-        <div className="backdrop-blur-xl bg-white/60 border border-purple-200 rounded-2xl shadow-xl p-4 space-y-4">
+        <div className="backdrop-blur-xl bg-white/60 border border-purple-200 rounded-2xl shadow-xl p-4 mb-6 space-y-4">
           <h2 className="text-xl font-semibold text-purple-900 flex items-center gap-2">
             <FiUsers /> Staff List
           </h2>
