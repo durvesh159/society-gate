@@ -248,7 +248,7 @@ export default function VisitorsPage() {
   pdf.setTextColor(50);
 
   const headers = ["Name", "Flat", "Purpose", "Entry", "Exit", "Guard"];
-  const colWidths = [25, 20, 30, 45, 45, 25];
+  const colWidths = [25, 20, 30, 50, 50, 25];
 
   let xPos = margin;
   headers.forEach((header, i) => {
