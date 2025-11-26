@@ -488,6 +488,12 @@ export default function Residents() {
 
         {/* Table */}
         <div className="backdrop-blur-xl bg-white/60 border border-purple-200 rounded-2xl shadow-xl p-4 sm:p-6">
+        <div className="flex items-center gap-2 mb-4">
+                    <FiUsers className="text-purple-700 text-xl" />
+                    <h2 className="text-lg sm:text-xl font-semibold text-purple-900">
+                      Visitor Logs
+                    </h2>
+                  </div>
           <table className="w-full min-w-[700px]">
             <thead className="bg-purple-100 text-purple-900">
               <tr>

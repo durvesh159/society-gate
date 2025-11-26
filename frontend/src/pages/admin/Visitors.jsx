@@ -419,7 +419,7 @@ export default function VisitorsPage() {
           <div className="flex items-center gap-2 mb-4">
             <FiUsers className="text-purple-700 text-xl" />
             <h2 className="text-lg sm:text-xl font-semibold text-purple-900">
-              Visitor Logs (Filtered)
+              Visitor Logs
             </h2>
           </div>
 
