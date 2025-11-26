@@ -571,6 +571,13 @@ export default function StaffPage() {
           >
             <FiUserPlus /> Add Staff
           </button>
+          {/* Export */}
+              <button
+                onClick={exportPDF}
+                className="flex items-center gap-2 bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-lg shadow-md"
+              >
+                <FiDownload /> Export PDF
+              </button>
         </div>
 
         {/* Card */}
@@ -627,18 +634,24 @@ export default function StaffPage() {
                 <option value="Outside">Outside</option>
               </select>
 
-              {/* Export */}
-              <button
-                onClick={exportPDF}
-                className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl"
-              >
-                <FiDownload /> Export PDF
-              </button>
+              
             </div>
           </div>
 
-          {/* Table */}
-          <div className="overflow-x-auto">
+          
+        </div>
+
+        {/* Table */}
+          <div
+                    className="backdrop-blur-xl bg-white/60 border border-purple-200 rounded-2xl shadow-xl p-4 sm:p-6"
+                    
+                  >
+                    <div className="flex items-center gap-2 mb-4">
+                      <FiUsers className="text-purple-700 text-xl" />
+                      <h2 className="text-lg sm:text-xl font-semibold text-purple-900">
+                        Visitor Logs
+                      </h2>
+                    </div>
             {filtered.length === 0 ? (
               <p className="text-sm text-gray-600">No staff found.</p>
             ) : (
@@ -699,7 +712,6 @@ export default function StaffPage() {
               </table>
             )}
           </div>
-        </div>
 
         {/* ----- All Modals (Original - unchanged) ----- */}
         {/* Add Modal */}
