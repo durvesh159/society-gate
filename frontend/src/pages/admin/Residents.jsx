@@ -381,7 +381,7 @@ export default function Residents() {
     pdf.setTextColor(50);
 
     const headers = ["Name", "Wing", "Flat", "Email", "Mobile"];
-    const widths = [35, 20, 25, 60, 30];
+    const widths = [40, 20, 25, 70, 30];
 
     let xPos = margin;
     headers.forEach((h, i) => {
