@@ -1,5 +1,5 @@
+// // // src/pages/admin/Staff.jsx
 // /* eslint-disable no-unused-vars */
-// // src/pages/admin/Staff.jsx
 // import React, { useState, useEffect, useContext, useMemo } from "react";
 // import {
 //   FiUserPlus,
@@ -138,31 +138,31 @@
 
 //   return (
 //     <DashboardLayout role="admin" onLogout={logout}>
-//       <div className="min-h-screen p-8 bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
+//       <div className="min-h-screen p-4 md:p-8 bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
 
 //         {/* Header */}
-//         <div className="flex justify-between items-center mb-10">
-//           <h1 className="text-3xl font-bold text-purple-900 tracking-wide">
+//         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-10">
+//           <h1 className="text-2xl md:text-3xl font-bold text-purple-900 tracking-wide">
 //             Staff Management
 //           </h1>
 
 //           <button
 //             onClick={() => setShowAddModal(true)}
-//             className="flex items-center gap-2 bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-xl shadow-md transition-all"
+//             className="flex items-center gap-2 bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-xl shadow-md transition-all w-full md:w-auto justify-center"
 //           >
 //             <FiUserPlus /> Add Staff
 //           </button>
 //         </div>
 
-//         {/* Table */}
-//         <div className="backdrop-blur-xl bg-white/60 border border-purple-200 rounded-2xl shadow-xl p-6">
-//           <h2 className="text-xl font-semibold text-purple-900 mb-4 flex items-center gap-2">
+//         {/* Table Wrapper */}
+//         <div className="backdrop-blur-xl bg-white/60 border border-purple-200 rounded-2xl shadow-xl p-4 s:p-6">
+//           <h2 className="text-lg s:text-xl font-semibold text-purple-900 mb-4 flex items-center gap-2">
 //             <FiUsers /> Staff List
 //           </h2>
 
-//           {/* Search + sort */}
-//           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-//             <div className="relative w-full md:w-72">
+//           {/* Search + Sort */}
+//           <div className="flex flex-col m:flex-row m:items-center m:justify-between gap-4 mb-4">
+//             <div className="relative w-full m:w-72">
 //               <input
 //                 value={query}
 //                 onChange={(e) => setQuery(e.target.value)}
@@ -184,7 +184,9 @@
 //               <button
 //                 onClick={() => toggleSort("name")}
 //                 className={`px-2 py-1 rounded-md ${
-//                   sortBy.field === "name" ? "bg-purple-100 text-purple-900" : "hover:bg-purple-50"
+//                   sortBy.field === "name"
+//                     ? "bg-purple-100 text-purple-900"
+//                     : "hover:bg-purple-50"
 //                 }`}
 //               >
 //                 Sort: Name {sortBy.field === "name" ? (sortBy.dir === "asc" ? "↑" : "↓") : ""}
@@ -193,7 +195,9 @@
 //               <button
 //                 onClick={() => toggleSort("role")}
 //                 className={`px-2 py-1 rounded-md ${
-//                   sortBy.field === "role" ? "bg-purple-100 text-purple-900" : "hover:bg-purple-50"
+//                   sortBy.field === "role"
+//                     ? "bg-purple-100 text-purple-900"
+//                     : "hover:bg-purple-50"
 //                 }`}
 //               >
 //                 Sort: Role {sortBy.field === "role" ? (sortBy.dir === "asc" ? "↑" : "↓") : ""}
@@ -206,7 +210,7 @@
 //             <div className="text-sm text-gray-600">No staff found.</div>
 //           ) : (
 //             <div className="overflow-x-auto">
-//               <table className="w-full border-collapse">
+//               <table className="w-full border-collapse text-sm s:text-base">
 //                 <thead>
 //                   <tr className="bg-purple-100/60 text-purple-900">
 //                     <th className="p-3 text-left">Name</th>
@@ -264,11 +268,16 @@
 //           )}
 //         </div>
 
+//         {/* --- ALL MODALS RESPONSIVE (NO LOGIC CHANGES) --- */}
+
 //         {/* ADD STAFF MODAL */}
 //         {showAddModal && (
-//           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-//             <div className="backdrop-blur-xl bg-white/70 border border-purple-200 shadow-2xl rounded-2xl w-full max-w-lg p-6">
-//               <h2 className="text-2xl font-bold text-purple-900 mb-4">Add Staff</h2>
+//           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+//             <div className="backdrop-blur-xl bg-white/70 border border-purple-200 shadow-2xl rounded-2xl w-full s:max-w-lg p-6">
+//               <h2 className="text-xl s:text-2xl font-bold text-purple-900 mb-4">
+//                 Add Staff
+//               </h2>
+
 //               <form className="grid gap-3" onSubmit={addStaff}>
 //                 {["name", "role", "address", "email", "password", "mobile"].map((field) => (
 //                   <input
@@ -306,9 +315,12 @@
 
 //         {/* VIEW STAFF MODAL */}
 //         {showViewModal && selectedStaff && (
-//           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-//             <div className="backdrop-blur-xl bg-white/70 border border-purple-200 shadow-2xl rounded-2xl w-full max-w-lg p-6">
-//               <h2 className="text-2xl font-bold text-purple-900 mb-4">Staff Details</h2>
+//           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+//             <div className="backdrop-blur-xl bg-white/70 border border-purple-200 shadow-2xl rounded-2xl w-full s:max-w-lg p-6">
+//               <h2 className="text-xl s:text-2xl font-bold text-purple-900 mb-4">
+//                 Staff Details
+//               </h2>
+
 //               <div className="space-y-2 text-gray-800">
 //                 <p><strong>Name:</strong> {selectedStaff.name}</p>
 //                 <p><strong>Role:</strong> {selectedStaff.role}</p>
@@ -339,11 +351,15 @@
 
 //         {/* DELETE STAFF MODAL */}
 //         {showDeleteModal && selectedStaff && (
-//           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-//             <div className="backdrop-blur-xl bg-white/70 border border-purple-200 shadow-2xl rounded-2xl w-full max-w-sm p-6">
-//               <h3 className="text-lg font-bold text-red-600 mb-2">Delete Staff</h3>
+//           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+//             <div className="backdrop-blur-xl bg-white/70 border border-purple-200 shadow-2xl rounded-2xl w-full s:max-w-sm p-6">
+//               <h3 className="text-lg s:text-xl font-bold text-red-600 mb-2">
+//                 Delete Staff
+//               </h3>
+
 //               <p className="text-sm text-gray-700 mb-6">
-//                 Are you sure you want to remove <strong>{selectedStaff.name}</strong> from the system? This action cannot be undone.
+//                 Are you sure you want to remove{" "}
+//                 <strong>{selectedStaff.name}</strong>? This action cannot be undone.
 //               </p>
 
 //               <div className="flex justify-end gap-3">
@@ -379,10 +395,12 @@ import {
   FiInfo,
   FiTrash2,
   FiSearch,
+  FiDownload,
   FiX,
 } from "react-icons/fi";
 import API from "../../api/api";
 import { AuthContext } from "../../contexts/AuthContext";
+import jsPDF from "jspdf";
 import DashboardLayout from "../../components/DashboardLayout";
 
 export default function StaffPage() {
@@ -408,6 +426,9 @@ export default function StaffPage() {
 
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState({ field: "name", dir: "asc" });
+
+  const [roleFilter, setRoleFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
   const handleFormChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -475,9 +496,15 @@ export default function StaffPage() {
     }
   };
 
+  const uniqueRoles = useMemo(
+    () => [...new Set(staffList.map((s) => s.role).filter(Boolean))],
+    [staffList]
+  );
+
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
     let list = staffList.slice();
+    const q = query.trim().toLowerCase();
+
     if (q) {
       list = list.filter(
         (s) =>
@@ -488,6 +515,12 @@ export default function StaffPage() {
       );
     }
 
+    if (roleFilter) list = list.filter((s) => s.role === roleFilter);
+    if (statusFilter)
+      list = list.filter((s) =>
+        statusFilter === "Inside" ? s.isPresent : !s.isPresent
+      );
+
     list.sort((a, b) => {
       const A = (a[sortBy.field] || "").toString().toLowerCase();
       const B = (b[sortBy.field] || "").toString().toLowerCase();
@@ -497,7 +530,7 @@ export default function StaffPage() {
     });
 
     return list;
-  }, [staffList, query, sortBy]);
+  }, [staffList, query, roleFilter, statusFilter, sortBy]);
 
   const toggleSort = (field) => {
     setSortBy((s) => {
@@ -506,6 +539,57 @@ export default function StaffPage() {
       }
       return { field, dir: "asc" };
     });
+  };
+
+  const exportPDF = () => {
+    if (!filtered.length) return;
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const margin = 10;
+    let yPos = 20;
+
+    pdf.setFontSize(18);
+    pdf.text("Staff Report", 105, 10, { align: "center" });
+
+    pdf.setFontSize(11);
+
+    const columnWidth = 32;
+    const rowHeight = 7;
+
+    pdf.setFont("helvetica", "bold");
+    const headers = ["Name", "Role", "Email", "Mobile", "Address", "Status"];
+
+    headers.forEach((h, i) => {
+      pdf.text(h, margin + i * columnWidth, yPos);
+    });
+
+    pdf.setFont("helvetica", "normal");
+    yPos += rowHeight;
+
+    filtered.forEach((s) => {
+      const rowVals = [
+        s.name,
+        s.role,
+        s.email,
+        s.mobile,
+        s.address || "—",
+        s.isPresent ? "Inside" : "Outside",
+      ];
+
+      rowVals.forEach((text, i) => {
+        const wrapped = pdf.splitTextToSize(text, columnWidth - 2);
+        pdf.text(wrapped, margin + i * columnWidth, yPos);
+      });
+
+      yPos += rowHeight * (pdf.splitTextToSize(s.address || "", columnWidth - 2).length || 1);
+
+      if (yPos > 270) {
+        pdf.addPage();
+        yPos = 20;
+      }
+    });
+
+    pdf.save("staff_report.pdf");
   };
 
   return (
@@ -532,9 +616,11 @@ export default function StaffPage() {
             <FiUsers /> Staff List
           </h2>
 
-          {/* Search + Sort */}
-          <div className="flex flex-col m:flex-row m:items-center m:justify-between gap-4 mb-4">
-            <div className="relative w-full m:w-72">
+          {/* Search + Filters + Export */}
+          <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 mb-4">
+
+            {/* Search */}
+            <div className="relative w-full xl:w-72">
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -552,29 +638,38 @@ export default function StaffPage() {
               )}
             </div>
 
-            <div className="flex items-center gap-2 text-sm text-purple-700">
-              <button
-                onClick={() => toggleSort("name")}
-                className={`px-2 py-1 rounded-md ${
-                  sortBy.field === "name"
-                    ? "bg-purple-100 text-purple-900"
-                    : "hover:bg-purple-50"
-                }`}
-              >
-                Sort: Name {sortBy.field === "name" ? (sortBy.dir === "asc" ? "↑" : "↓") : ""}
-              </button>
+            {/* Role Filter */}
+            <select
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value)}
+              className="px-3 py-2 border rounded-xl bg-white/80 focus:ring-2 focus:ring-purple-300"
+            >
+              <option value="">All Roles</option>
+              {uniqueRoles.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
 
-              <button
-                onClick={() => toggleSort("role")}
-                className={`px-2 py-1 rounded-md ${
-                  sortBy.field === "role"
-                    ? "bg-purple-100 text-purple-900"
-                    : "hover:bg-purple-50"
-                }`}
-              >
-                Sort: Role {sortBy.field === "role" ? (sortBy.dir === "asc" ? "↑" : "↓") : ""}
-              </button>
-            </div>
+            {/* Status Filter */}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-2 border rounded-xl bg-white/80 focus:ring-2 focus:ring-purple-300"
+            >
+              <option value="">All Status</option>
+              <option value="Inside">Inside</option>
+              <option value="Outside">Outside</option>
+            </select>
+
+            {/* Export PDF */}
+            <button
+              onClick={exportPDF}
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl shadow-md transition-all"
+            >
+              <FiDownload /> Export PDF
+            </button>
           </div>
 
           {/* Table */}
@@ -640,7 +735,7 @@ export default function StaffPage() {
           )}
         </div>
 
-        {/* --- ALL MODALS RESPONSIVE (NO LOGIC CHANGES) --- */}
+        {/* == MODALS : No Logic Change == */}
 
         {/* ADD STAFF MODAL */}
         {showAddModal && (
