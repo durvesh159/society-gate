@@ -187,6 +187,7 @@ export default function VisitorsPage() {
   }, []);
 
   const unique = (key) => [...new Set(visitors.map((v) => v[key]).filter(Boolean))];
+  const uniqueGuards = [...new Set(visitors.map(v => v.guard?.name).filter(Boolean))];
 
   const applyFilter = () => {
     let data = [...visitors];
@@ -232,17 +233,21 @@ export default function VisitorsPage() {
 const exportPDF = async () => {
   const table = tableRef.current;
 
-  // Temporarily remove gradient background for PDF capture
-  const prevBg = table.style.background;
+  // Apply white background to avoid unsupported OKLCH color capture
+  const oldbg = table.style.background;
   table.style.background = "#ffffff";
 
   const canvas = await html2canvas(table, {
     scale: 2,
     useCORS: true,
-    backgroundColor: "#ffffff" // Important patch
+    backgroundColor: "#ffffff",
+    logging: false,
+    removeContainer: true,
+    scrollY: -window.scrollY, // Fix viewport cut
   });
 
-  table.style.background = prevBg; // restore UI background
+  // Restore original background
+  table.style.background = oldbg;
 
   const imgData = canvas.toDataURL("image/png");
   const pdf = new jsPDF("p", "mm", "a4");
@@ -252,6 +257,7 @@ const exportPDF = async () => {
   pdf.addImage(imgData, "PNG", 0, 0, width, height);
   pdf.save("visitor-logs.pdf");
 };
+
 
 
   return (
@@ -312,16 +318,17 @@ const exportPDF = async () => {
             </select>
 
             {/* Guard Filter */}
-            <select
-              value={guardFilter}
-              onChange={(e) => setGuardFilter(e.target.value)}
-              className="p-2 rounded-lg border w-full sm:w-40"
-            >
-              <option value="">Guard</option>
-              {unique("guard.name").map((n) => (
-                <option key={n}>{n}</option>
-              ))}
-            </select>
+<select
+  value={guardFilter}
+  onChange={(e) => setGuardFilter(e.target.value)}
+  className="p-2 rounded-lg border w-full sm:w-40"
+>
+  <option value="">Guard</option>
+  {uniqueGuards.map((name) => (
+    <option key={name}>{name}</option>
+  ))}
+</select>
+
           </div>
 
           {/* Date Filters */}
