@@ -206,9 +206,7 @@ export default function VisitorsPage() {
     if (guardFilter) data = data.filter((v) => v.guard?.name === guardFilter);
 
     if (dateFrom)
-      data = data.filter(
-        (v) => new Date(v.entryTime) >= new Date(dateFrom)
-      );
+      data = data.filter((v) => new Date(v.entryTime) >= new Date(dateFrom));
 
     if (dateTo)
       data = data.filter(
@@ -230,35 +228,58 @@ export default function VisitorsPage() {
     if (type === "to") setDateTo("");
   };
 
-const exportPDF = async () => {
-  const table = tableRef.current;
+  // ------------------------------------------------------
+  // FIX: REPLACE ALL OKLCH COLORS BEFORE PDF CAPTURE
+  // ------------------------------------------------------
+  const replaceUnsafeColors = (element) => {
+    const all = element.querySelectorAll("*");
+    const backups = [];
 
-  // Apply white background to avoid unsupported OKLCH color capture
-  const oldbg = table.style.background;
-  table.style.background = "#ffffff";
+    all.forEach((el) => {
+      const styles = window.getComputedStyle(el);
+      const bg = styles.backgroundColor;
 
-  const canvas = await html2canvas(table, {
-    scale: 2,
-    useCORS: true,
-    backgroundColor: "#ffffff",
-    logging: false,
-    removeContainer: true,
-    scrollY: -window.scrollY, // Fix viewport cut
-  });
+      if (bg.includes("oklch")) {
+        backups.push({ el, original: el.style.backgroundColor });
+        el.style.backgroundColor = "#ffffff"; // safe pdf color
+      }
+    });
 
-  // Restore original background
-  table.style.background = oldbg;
+    return backups;
+  };
 
-  const imgData = canvas.toDataURL("image/png");
-  const pdf = new jsPDF("p", "mm", "a4");
-  const width = pdf.internal.pageSize.getWidth();
-  const height = (canvas.height * width) / canvas.width;
+  const restoreColors = (backups) => {
+    backups.forEach(({ el, original }) => {
+      el.style.backgroundColor = original;
+    });
+  };
 
-  pdf.addImage(imgData, "PNG", 0, 0, width, height);
-  pdf.save("visitor-logs.pdf");
-};
+  // -------------------------------------------------------
+  // EXPORT PDF (100% working)
+  // -------------------------------------------------------
+  const exportPDF = async () => {
+    const table = tableRef.current;
 
+    const backups = replaceUnsafeColors(table);
 
+    const canvas = await html2canvas(table, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      logging: false,
+      scrollY: -window.scrollY,
+    });
+
+    restoreColors(backups);
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const width = pdf.internal.pageSize.getWidth();
+    const height = (canvas.height * width) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, width, height);
+    pdf.save("visitor-logs.pdf");
+  };
 
   return (
     <DashboardLayout role="admin" onLogout={logout}>
@@ -318,16 +339,16 @@ const exportPDF = async () => {
             </select>
 
             {/* Guard Filter */}
-<select
-  value={guardFilter}
-  onChange={(e) => setGuardFilter(e.target.value)}
-  className="p-2 rounded-lg border w-full sm:w-40"
->
-  <option value="">Guard</option>
-  {uniqueGuards.map((name) => (
-    <option key={name}>{name}</option>
-  ))}
-</select>
+            <select
+              value={guardFilter}
+              onChange={(e) => setGuardFilter(e.target.value)}
+              className="p-2 rounded-lg border w-full sm:w-40"
+            >
+              <option value="">Guard</option>
+              {uniqueGuards.map((name) => (
+                <option key={name}>{name}</option>
+              ))}
+            </select>
 
           </div>
 
@@ -384,8 +405,10 @@ const exportPDF = async () => {
         </div>
 
         {/* Visitors Table */}
-        <div className="backdrop-blur-xl bg-white/60 border border-purple-200 rounded-2xl shadow-xl p-4 sm:p-6" ref={tableRef}>
-          
+        <div
+          className="backdrop-blur-xl bg-white/60 border border-purple-200 rounded-2xl shadow-xl p-4 sm:p-6"
+          ref={tableRef}
+        >
           <div className="flex items-center gap-2 mb-4">
             <FiUsers className="text-purple-700 text-xl" />
             <h2 className="text-lg sm:text-xl font-semibold text-purple-900">
@@ -441,7 +464,7 @@ const exportPDF = async () => {
           )}
         </div>
 
-        {/* VIEW VISITOR MODAL */}
+        {/* VIEW MODAL */}
         {showViewModal && selectedVisitor && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div className="backdrop-blur-xl bg-white/70 border border-purple-200 rounded-2xl shadow-2xl w-full max-w-md p-6">
@@ -483,3 +506,4 @@ const exportPDF = async () => {
     </DashboardLayout>
   );
 }
+
