@@ -385,7 +385,7 @@ export default function Guards() {
     pdf.setTextColor(50);
 
     const headers = ["Name", "Address", "Email", "Mobile", "Status"];
-    const widths = [40, 50, 55, 30, 30];
+    const widths = [40, 50, 60, 25, 25];
 
     let xPos = margin;
     headers.forEach((h, i) => {
