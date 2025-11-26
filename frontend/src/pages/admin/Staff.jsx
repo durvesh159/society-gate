@@ -483,7 +483,7 @@ const exportPDF = () => {
   pdf.setTextColor(50);
 
   const headers = ["Name", "Role", "Email", "Mobile", "Status"];
-  const widths = [40, 30, 60, 25, 25];
+  const widths = [40, 30, 65, 30, 30];
 
   let xPos = margin;
   headers.forEach((h, i) => {
