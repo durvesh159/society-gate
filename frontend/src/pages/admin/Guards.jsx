@@ -385,7 +385,7 @@ export default function Guards() {
     pdf.setTextColor(50);
 
     const headers = ["Name", "Address", "Email", "Mobile", "Status"];
-    const widths = [40, 50, 50, 30, 30];
+    const widths = [40, 50, 55, 30, 30];
 
     let xPos = margin;
     headers.forEach((h, i) => {
@@ -410,12 +410,15 @@ export default function Guards() {
       ];
 
       let x = margin;
+      let rowHeight = 0;
       row.forEach((text, i) => {
-        pdf.text(String(text), x, yPos);
-        x += widths[i];
-      });
+      const lines = pdf.splitTextToSize(String(text), widths[i]);
+      pdf.text(lines, x, yPos);
+      rowHeight = Math.max(rowHeight, lines.length * 7); // 7mm per line approx
+      x += widths[i];
+    });
 
-      yPos += 8;
+      yPos += rowHeight + 2;
     });
 
     pdf.save("guards.pdf");
