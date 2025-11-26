@@ -229,18 +229,30 @@ export default function VisitorsPage() {
     if (type === "to") setDateTo("");
   };
 
-  const exportPDF = async () => {
-    const table = tableRef.current;
-    const canvas = await html2canvas(table, { scale: 2 });
-    const imgData = canvas.toDataURL("image/png");
+const exportPDF = async () => {
+  const table = tableRef.current;
 
-    const pdf = new jsPDF("p", "mm", "a4");
-    const width = pdf.internal.pageSize.getWidth();
-    const height = (canvas.height * width) / canvas.width;
+  // Temporarily remove gradient background for PDF capture
+  const prevBg = table.style.background;
+  table.style.background = "#ffffff";
 
-    pdf.addImage(imgData, "PNG", 0, 0, width, height);
-    pdf.save("visitor-logs.pdf");
-  };
+  const canvas = await html2canvas(table, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: "#ffffff" // Important patch
+  });
+
+  table.style.background = prevBg; // restore UI background
+
+  const imgData = canvas.toDataURL("image/png");
+  const pdf = new jsPDF("p", "mm", "a4");
+  const width = pdf.internal.pageSize.getWidth();
+  const height = (canvas.height * width) / canvas.width;
+
+  pdf.addImage(imgData, "PNG", 0, 0, width, height);
+  pdf.save("visitor-logs.pdf");
+};
+
 
   return (
     <DashboardLayout role="admin" onLogout={logout}>
