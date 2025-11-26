@@ -389,37 +389,34 @@
 
 
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import {
   FiUserPlus,
   FiUsers,
   FiInfo,
   FiTrash2,
   FiSearch,
-  FiDownload,
   FiX,
+  FiDownload,
 } from "react-icons/fi";
+import jsPDF from "jspdf";
 import API from "../../api/api";
 import { AuthContext } from "../../contexts/AuthContext";
 import DashboardLayout from "../../components/DashboardLayout";
-import jsPDF from "jspdf";
 
 export default function StaffPage() {
   const { logout, user } = useContext(AuthContext);
-
   const [staffList, setStaffList] = useState([]);
   const [filtered, setFiltered] = useState([]);
-
-  const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
   const [selectedStaff, setSelectedStaff] = useState(null);
+  const [query, setQuery] = useState("");
+
+  const [roleFilter, setRoleFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -430,14 +427,8 @@ export default function StaffPage() {
     mobile: "",
   });
 
-  const toastSuccess = (msg) => {
-    const el = document.createElement("div");
-    el.textContent = msg;
-    el.className =
-      "fixed bottom-6 right-6 bg-emerald-600 text-white px-4 py-2 rounded-xl shadow-lg z-50 animate-slideIn";
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 2600);
-  };
+  const handleFormChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const fetchStaff = async () => {
     try {
@@ -453,8 +444,74 @@ export default function StaffPage() {
     if (user?.token) fetchStaff();
   }, [user]);
 
-  const handleFormChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // 🔍 Search + Filters
+  useEffect(() => {
+    let data = [...staffList];
+
+    if (query.trim() !== "")
+      data = data.filter(
+        (s) =>
+          s.name?.toLowerCase().includes(query.toLowerCase()) ||
+          s.role?.toLowerCase().includes(query.toLowerCase()) ||
+          s.email?.toLowerCase().includes(query.toLowerCase()) ||
+          s.mobile?.includes(query)
+      );
+
+    if (roleFilter) data = data.filter((s) => s.role === roleFilter);
+    if (statusFilter)
+      data = data.filter((s) =>
+        statusFilter === "Inside" ? s.isPresent : !s.isPresent
+      );
+
+    setFiltered(data);
+  }, [query, roleFilter, statusFilter, staffList]);
+
+  const uniqueRoles = [...new Set(staffList.map((s) => s.role).filter(Boolean))];
+
+  // 🧾 Export PDF
+  const exportPDF = () => {
+    if (!filtered.length) return;
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const margin = 10;
+    let yPos = 20;
+
+    pdf.setFontSize(18);
+    pdf.text("Staff List", pageWidth / 2, yPos, { align: "center" });
+    yPos += 10;
+
+    pdf.setFontSize(11);
+
+    filtered.forEach((s, index) => {
+      const status = s.isPresent ? "Inside" : "Outside";
+      const address = `${s.address || "—"}`;
+
+      pdf.text(
+        [
+          `Name: ${s.name}`,
+          `Role: ${s.role || "—"}`,
+          `Email: ${s.email}`,
+          `Mobile: ${s.mobile}`,
+          `Address: ${address}`,
+          `Status: ${status}`,
+          `-----------------------------`,
+        ],
+        margin,
+        yPos
+      );
+
+      const lineCount = address.length > 60 ? 6 : 5;
+      yPos += lineCount * 7;
+
+      if (yPos > 270) {
+        pdf.addPage();
+        yPos = 20;
+      }
+    });
+
+    pdf.save("staff-list.pdf");
+  };
 
   const addStaff = async (e) => {
     e.preventDefault();
@@ -470,10 +527,9 @@ export default function StaffPage() {
         mobile: "",
       });
       setShowAddModal(false);
-      fetchStaff();
-      toastSuccess("Staff member added successfully!");
+      await fetchStaff();
+      toastSuccess("Staff added successfully!");
     } catch (err) {
-      console.error("addStaff", err);
       alert(err.response?.data?.msg || "Error adding staff");
     } finally {
       setLoading(false);
@@ -481,270 +537,200 @@ export default function StaffPage() {
   };
 
   const deleteStaff = async () => {
+    if (!selectedStaff) return;
     try {
       await API.delete(`/admin/staff/${selectedStaff._id}`);
       setShowDeleteModal(false);
-      fetchStaff();
+      await fetchStaff();
       toastSuccess("Staff deleted successfully!");
-    } catch (err) {
-      alert("Error removing staff");
+    } catch {
+      alert("Failed to delete staff");
     }
   };
 
-  const unique = (key) =>
-    [...new Set(staffList.map((i) => i[key]).filter(Boolean))];
-
-  // 💥 FILTERING
-  useEffect(() => {
-    let list = [...staffList];
-
-    if (search.trim())
-      list = list.filter(
-        (s) =>
-          s.name?.toLowerCase().includes(search.toLowerCase()) ||
-          s.role?.toLowerCase().includes(search.toLowerCase()) ||
-          s.email?.toLowerCase().includes(search.toLowerCase()) ||
-          s.mobile?.includes(search)
-      );
-
-    if (roleFilter) list = list.filter((s) => s.role === roleFilter);
-    if (statusFilter)
-      list = list.filter((s) =>
-        statusFilter === "Inside" ? s.isPresent === true : s.isPresent === false
-      );
-
-    setFiltered(list);
-  }, [staffList, search, roleFilter, statusFilter]);
-
-  const clearFilter = (type) => {
-    if (type === "role") setRoleFilter("");
-    if (type === "status") setStatusFilter("");
-  };
-
-  // 💥 Export PDF with Address + Wrap Text
-  const exportPDF = () => {
-    if (!filtered.length) return;
-    const pdf = new jsPDF("p", "mm", "a4");
-
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    let yPos = 20;
-
-    pdf.setFontSize(18);
-    pdf.text("Staff Report", pageWidth / 2, 10, { align: "center" });
-    pdf.setFontSize(11);
-
-    const colWidth = [40, 25, 40, 25, 50, 20];
-    const headers = ["Name", "Role", "Email", "Mobile", "Address", "Status"];
-
-    pdf.setFont("bold");
-    let x = 10;
-    headers.forEach((h, i) => {
-      pdf.text(h, x, yPos);
-      x += colWidth[i];
-    });
-
-    pdf.setFont("normal");
-    yPos += 8;
-
-    filtered.forEach((s) => {
-      const row = [
-        s.name,
-        s.role || "—",
-        s.email,
-        s.mobile,
-        pdf.splitTextToSize(s.address || "—", colWidth[4]),
-        s.isPresent ? "Inside" : "Outside",
-      ];
-
-      let maxRows = Math.max(
-        row[4].length,
-        1
-      );
-
-      for (let i = 0; i < maxRows; i++) {
-        x = 10;
-        headers.forEach((_, col) => {
-          const txt = Array.isArray(row[col]) ? row[col][i] || "" : row[col];
-          pdf.text(txt.toString(), x, yPos);
-          x += colWidth[col];
-        });
-        yPos += 6;
-        if (yPos > 280) {
-          pdf.addPage();
-          yPos = 20;
-        }
-      }
-    });
-
-    pdf.save("Staff_Report.pdf");
+  const toastSuccess = (msg) => {
+    const el = document.createElement("div");
+    el.textContent = msg;
+    el.className =
+      "fixed bottom-6 right-6 bg-emerald-600 text-white px-4 py-2 rounded-xl shadow-lg z-50 animate-slideIn";
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2600);
   };
 
   return (
     <DashboardLayout role="admin" onLogout={logout}>
-      <div className="min-h-screen p-4 md:p-8 bg-gradient-to-br from-purple-100 to-teal-50">
-
-        {/* Page Header */}
-        <div className="flex md:flex-row flex-col justify-between items-center gap-4 mb-6">
-          <h1 className="text-3xl font-bold text-purple-900">Staff Management</h1>
+      <div className="min-h-screen p-4 md:p-8 bg-gradient-to-br from-purple-100 via-blue-50 to-teal-50 text-gray-900">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-10">
+          <h1 className="text-2xl md:text-3xl font-bold text-purple-900 tracking-wide">
+            Staff Management
+          </h1>
           <button
-            className="flex items-center gap-2 bg-purple-700 text-white px-4 py-2 rounded-lg"
             onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-2 bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-xl shadow-md transition-all w-full md:w-auto justify-center"
           >
             <FiUserPlus /> Add Staff
           </button>
         </div>
 
         {/* Card */}
-        <div className="p-4 rounded-xl bg-white/70 shadow-xl border border-purple-200">
-          <h2 className="font-semibold text-lg text-purple-900 flex items-center gap-2 mb-4">
+        <div className="backdrop-blur-xl bg-white/60 border border-purple-200 rounded-2xl shadow-xl p-4 space-y-4">
+          <h2 className="text-xl font-semibold text-purple-900 flex items-center gap-2">
             <FiUsers /> Staff List
           </h2>
 
-          {/* Search + Filters + Export */}
-          <div className="flex flex-wrap gap-3 mb-4">
-
+          {/* 🔍 Search + Filter + Export */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             {/* Search */}
-            <div className="relative w-full sm:w-64">
+            <div className="relative w-full md:w-72">
               <input
-                placeholder="Search..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 pr-8 w-full py-2 border rounded-lg"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search staff..."
+                className="pl-10 pr-4 py-2 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-300 w-full"
               />
-              <FiSearch className="absolute left-3 top-3 text-purple-500" />
-              {search && (
-                <FiX
-                  onClick={() => setSearch("")}
-                  className="absolute right-3 top-3 cursor-pointer text-purple-500"
-                />
+              <FiSearch className="absolute left-3 top-2.5 text-purple-400" />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  className="absolute right-2 top-2.5 text-purple-400"
+                >
+                  <FiX />
+                </button>
               )}
             </div>
 
-            {/* Role Filter */}
-            <select
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-              className="py-2 px-3 border rounded-lg bg-white"
-            >
-              <option value="">All Roles</option>
-              {unique("role").map((r) => (
-                <option key={r}>{r}</option>
-              ))}
-            </select>
+            {/* Filters */}
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Role */}
+              <select
+                value={roleFilter}
+                onChange={(e) => setRoleFilter(e.target.value)}
+                className="px-3 py-2 rounded-xl border border-purple-200 bg-white"
+              >
+                <option value="">Filter: Role</option>
+                {uniqueRoles.map((r, i) => (
+                  <option key={i} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
 
-            {/* Status Filter */}
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="py-2 px-3 border rounded-lg bg-white"
-            >
-              <option value="">All Status</option>
-              <option value="Inside">Inside</option>
-              <option value="Outside">Outside</option>
-            </select>
+              {/* Status */}
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-3 py-2 rounded-xl border border-purple-200 bg-white"
+              >
+                <option value="">Filter: Status</option>
+                <option value="Inside">Inside</option>
+                <option value="Outside">Outside</option>
+              </select>
 
-            <button
-              onClick={exportPDF}
-              className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg ml-auto"
-            >
-              <FiDownload /> Export PDF
-            </button>
+              {/* Export */}
+              <button
+                onClick={exportPDF}
+                className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl"
+              >
+                <FiDownload /> Export PDF
+              </button>
+            </div>
           </div>
 
           {/* Table */}
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-purple-100 text-purple-900">
-                <tr>
-                  <th className="p-3 text-left">Name</th>
-                  <th className="p-3 text-left">Role</th>
-                  <th className="p-3 text-left">Email</th>
-                  <th className="p-3 text-left">Mobile</th>
-                  <th className="p-3 text-left">Status</th>
-                  <th className="p-3 text-center">Actions</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {filtered.map((s) => (
-                  <tr key={s._id} className="border-b hover:bg-purple-50">
-                    <td className="p-3 font-medium">{s.name}</td>
-                    <td className="p-3">{s.role}</td>
-                    <td className="p-3">{s.email}</td>
-                    <td className="p-3">{s.mobile}</td>
-                    <td className="p-3">
-                      {s.isPresent ? (
-                        <span className="text-green-700">Inside</span>
-                      ) : (
-                        <span className="text-gray-600">Outside</span>
-                      )}
-                    </td>
-
-                    <td className="p-3 flex gap-4 justify-center">
-                      <FiInfo
-                        className="cursor-pointer text-purple-700"
-                        size={20}
-                        onClick={() => {
-                          setSelectedStaff(s);
-                          setShowViewModal(true);
-                        }}
-                      />
-                      <FiTrash2
-                        className="cursor-pointer text-red-600"
-                        size={20}
-                        onClick={() => {
-                          setSelectedStaff(s);
-                          setShowDeleteModal(true);
-                        }}
-                      />
-                    </td>
-                  </tr>
-                ))}
-
-                {!filtered.length && (
+            {filtered.length === 0 ? (
+              <p className="text-sm text-gray-600">No staff found.</p>
+            ) : (
+              <table className="w-full border-collapse text-sm">
+                <thead className="bg-purple-100/60 text-purple-900">
                   <tr>
-                    <td className="p-3 text-center" colSpan={6}>
-                      No staff found
-                    </td>
+                    <th className="p-3 text-left">Name</th>
+                    <th className="p-3 text-left">Role</th>
+                    <th className="p-3 text-left">Email</th>
+                    <th className="p-3 text-left">Mobile</th>
+                    <th className="p-3 text-left">Status</th>
+                    <th className="p-3 text-center">Actions</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+
+                <tbody>
+                  {filtered.map((s) => (
+                    <tr
+                      key={s._id}
+                      className="border-b hover:bg-purple-50 transition"
+                    >
+                      <td className="p-3 font-semibold">{s.name}</td>
+                      <td className="p-3 capitalize">{s.role}</td>
+                      <td className="p-3">{s.email}</td>
+                      <td className="p-3">{s.mobile}</td>
+                      <td
+                        className={`p-3 font-medium ${
+                          s.isPresent ? "text-green-600" : "text-gray-500"
+                        }`}
+                      >
+                        {s.isPresent ? "Inside" : "Outside"}
+                      </td>
+
+                      <td className="p-3 flex justify-center gap-4">
+                        <button
+                          className="text-purple-700 hover:text-purple-900"
+                          onClick={() => {
+                            setSelectedStaff(s);
+                            setShowViewModal(true);
+                          }}
+                        >
+                          <FiInfo size={20} />
+                        </button>
+
+                        <button
+                          className="text-red-600 hover:text-red-700"
+                          onClick={() => {
+                            setSelectedStaff(s);
+                            setShowDeleteModal(true);
+                          }}
+                        >
+                          <FiTrash2 size={20} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
 
-        {/* 🔻 Existing Modals Code (Unchanged) */}
+        {/* ----- All Modals (Original - unchanged) ----- */}
+        {/* Add Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-            <div className="bg-white p-6 rounded-xl w-full max-w-lg shadow-xl">
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+            <div className="bg-white/80 p-6 rounded-2xl border max-w-md w-full">
               <h2 className="text-xl font-bold mb-4">Add Staff</h2>
               <form className="grid gap-3" onSubmit={addStaff}>
-                {["name", "role", "email", "mobile", "address", "password"].map(
-                  (field) => (
-                    <input
-                      key={field}
-                      name={field}
-                      value={form[field]}
-                      onChange={handleFormChange}
-                      placeholder={field.toUpperCase()}
-                      className="p-3 border rounded-lg"
-                      type={field === "password" ? "password" : "text"}
-                      required
-                    />
-                  )
-                )}
-
-                <div className="flex justify-end gap-3">
+                {["name", "role", "address", "email", "password", "mobile"].map((field) => (
+                  <input
+                    key={field}
+                    name={field}
+                    value={form[field]}
+                    onChange={handleFormChange}
+                    placeholder={field.toUpperCase()}
+                    className="p-3 border rounded-xl"
+                    type={field === "password" ? "password" : "text"}
+                    required
+                  />
+                ))}
+                <div className="flex justify-end gap-3 mt-4">
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    className="px-4 py-2 bg-gray-300 rounded-lg"
+                    className="px-4 py-2 bg-gray-300 rounded-xl"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2 bg-purple-700 text-white rounded-lg"
+                    className="px-6 py-2 bg-purple-700 text-white rounded-xl"
                   >
                     {loading ? "Adding..." : "Add"}
                   </button>
@@ -754,22 +740,30 @@ export default function StaffPage() {
           </div>
         )}
 
-        {/* VIEW STAFF */}
+        {/* View Modal */}
         {showViewModal && selectedStaff && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-            <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md">
-              <h2 className="text-xl font-bold mb-3">Staff Details</h2>
-              <p><strong>Name:</strong> {selectedStaff.name}</p>
-              <p><strong>Role:</strong> {selectedStaff.role}</p>
-              <p><strong>Email:</strong> {selectedStaff.email}</p>
-              <p><strong>Mobile:</strong> {selectedStaff.mobile}</p>
-              <p><strong>Address:</strong> {selectedStaff.address}</p>
-              <p><strong>Status:</strong> {selectedStaff.isPresent ? "Inside" : "Outside"}</p>
-
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+            <div className="bg-white/80 p-6 rounded-2xl border w-full max-w-md">
+              <h2 className="text-xl font-bold mb-4">Staff Details</h2>
+              <div className="space-y-2">
+                <p><strong>Name:</strong> {selectedStaff.name}</p>
+                <p><strong>Role:</strong> {selectedStaff.role}</p>
+                <p><strong>Email:</strong> {selectedStaff.email}</p>
+                <p><strong>Mobile:</strong> {selectedStaff.mobile}</p>
+                <p><strong>Address:</strong> {selectedStaff.address || "—"}</p>
+                <p>
+                  <strong>Status:</strong>{" "}
+                  {selectedStaff.isPresent ? (
+                    <span className="text-green-700">Inside</span>
+                  ) : (
+                    <span className="text-gray-600">Outside</span>
+                  )}
+                </p>
+              </div>
               <div className="flex justify-end mt-6">
                 <button
                   onClick={() => setShowViewModal(false)}
-                  className="px-4 py-2 bg-purple-700 text-white rounded-lg"
+                  className="px-4 py-2 bg-purple-700 text-white rounded-xl"
                 >
                   Close
                 </button>
@@ -778,24 +772,25 @@ export default function StaffPage() {
           </div>
         )}
 
-        {/* DELETE */}
+        {/* Delete Modal */}
         {showDeleteModal && selectedStaff && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-            <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-sm">
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+            <div className="bg-white/80 p-6 rounded-2xl border max-w-sm w-full">
               <h3 className="text-lg font-bold text-red-600 mb-2">Delete Staff</h3>
-              <p className="mb-4">
-                Remove <strong>{selectedStaff.name}</strong>? This cannot be undone.
+              <p className="text-sm mb-6">
+                Are you sure you want to delete{" "}
+                <strong>{selectedStaff.name}</strong>?
               </p>
               <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setShowDeleteModal(false)}
-                  className="px-4 py-2 bg-gray-300 rounded-lg"
+                  className="px-4 py-2 bg-gray-300 rounded-xl"
                 >
                   Cancel
                 </button>
                 <button
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg"
                   onClick={deleteStaff}
+                  className="px-4 py-2 bg-red-600 text-white rounded-xl"
                 >
                   Delete
                 </button>
@@ -803,7 +798,6 @@ export default function StaffPage() {
             </div>
           </div>
         )}
-
       </div>
     </DashboardLayout>
   );
