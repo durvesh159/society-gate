@@ -377,6 +377,9 @@ export default function Residents() {
     pdf.setFontSize(18);
     pdf.text("Residents Report", pageWidth / 2, 10, { align: "center" });
 
+    pdf.setFontSize(12);
+    pdf.setTextColor(50);
+
     const headers = ["Name", "Wing", "Flat", "Email", "Mobile"];
     const widths = [35, 20, 25, 60, 30];
 
