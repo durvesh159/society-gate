@@ -144,7 +144,7 @@ const Sidebar = ({ role, onLogout, isOpen, toggleSidebar }) => {
   <img
     src="/DWI_logo.png"
     alt="Company Logo"
-    className="h-12 w-auto object-contain"
+    className="h-12 w-2xl object-contain"
   />
 
         {/* Close for mobile */}
