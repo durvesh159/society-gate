@@ -140,8 +140,12 @@ const Sidebar = ({ role, onLogout, isOpen, toggleSidebar }) => {
       `}
     >
       {/* Logo */}
-      <div className="p-5 text-2xl font-bold border-b border-purple-800 flex justify-between items-center">
-        SocietyGate
+<div className="p-5 border-b border-purple-800 flex justify-between items-center">
+  <img
+    src="/DWI_logo.png"
+    alt="Company Logo"
+    className="h-12 w-auto object-contain"
+  />
 
         {/* Close for mobile */}
         <button
