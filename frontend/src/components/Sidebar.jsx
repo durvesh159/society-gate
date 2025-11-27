@@ -140,12 +140,14 @@ const Sidebar = ({ role, onLogout, isOpen, toggleSidebar }) => {
       `}
     >
       {/* Logo */}
-<div className="p-5 border-b border-purple-800 flex justify-between items-center">
-  <img
-    src="/DWI_logo.png"
-    alt="Company Logo"
-    className="h-16 w-3xl bg-white object-contain"
-  />
+<div className="p-3 border-b border-purple-800 flex justify-between items-center">
+   <div className="bg-white rounded-xl p-3 shadow-md flex items-center justify-center w-full">
+    <img
+      src="/DWI_logo.png"
+      alt="Company Logo"
+      className="h-14 w-auto object-contain"
+    />
+  </div>
 
         {/* Close for mobile */}
         <button
